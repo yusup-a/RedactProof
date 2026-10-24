@@ -100,6 +100,7 @@ Values above are illustrative only.
 |---|---|---|
 | `gemini_status` | `"ok" \| "unavailable" \| "error"` | `ok`: Gemini ran and its results are included. `unavailable`: no API key configured. `error`: Gemini failed (timeout, quota, invalid output); results are regex-only. |
 | `gemini_message` | `string \| null` | Human-readable reason when status is not `ok`. Safe to display. |
+| `gemini_model` | `string \| null` | The Gemini model that actually produced the results (the backend falls back to other models when one is overloaded). `null` when `gemini_status` is not `ok`. |
 | `gemini_stats` | `object \| null` | Only when `gemini_status` is `ok`. `suggested`: values Gemini returned. `accepted`: values verified to exist in the PDF and located. `rejected`: values thrown out (not in the document, malformed, or too short). Good for the Gemini insights panel. |
 | `pages[].extracted_text` | `string` | All text a machine can extract from the page, **including text hidden under black boxes**. Use it for the Attacker View. Contains sensitive demo data — never log it. |
 | `findings[].id` | `string` | Server-generated. The only thing sent back to `/api/redact`. |
