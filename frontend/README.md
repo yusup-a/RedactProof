@@ -57,4 +57,4 @@ src/
 
 ## Screenshots
 
-`screenshots/` holds captures of the real app against the real backend, running in regex-only mode (no Gemini key on the capture machine). Retake them with `GEMINI_API_KEY` set to show Gemini findings for Devpost.
+`screenshots/` holds captures of the real app against the real backend with Gemini enabled, using the synthetic PDFs in `demo/samples/`. No mock data.
