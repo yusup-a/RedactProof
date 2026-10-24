@@ -4,6 +4,10 @@ import pymupdf
 
 from .models import Finding
 
+# Search hits end exactly where the next character begins; without a small inset the
+# redaction also removes touching neighbors such as a trailing comma.
+INSET = 0.5
+
 
 def redact(pdf_bytes: bytes, findings: list[Finding]) -> tuple[bytes, int]:
     """Return (redacted PDF bytes, number of locations redacted)."""
@@ -12,7 +16,8 @@ def redact(pdf_bytes: bytes, findings: list[Finding]) -> tuple[bytes, int]:
         count = 0
         for finding in findings:
             for loc in finding.locations:
-                doc[loc.page - 1].add_redact_annot(pymupdf.Rect(loc.bbox), fill=(0, 0, 0))
+                rect = pymupdf.Rect(loc.bbox) + (INSET, INSET, -INSET, -INSET)
+                doc[loc.page - 1].add_redact_annot(rect, fill=(0, 0, 0))
                 count += 1
         for page in doc:
             page.apply_redactions(

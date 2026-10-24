@@ -51,6 +51,17 @@ def test_redaction_removes_selected_and_preserves_the_rest():
     assert verifier.verify(output, findings, count).status == "passed"
 
 
+def test_redaction_keeps_adjacent_punctuation():
+    pdf = s.build_insecure_statement()
+    findings = findings_for(pdf, [Candidate("Priya Natarajan", "PERSON_NAME", "", ["gemini"], "high")])
+
+    output, _ = redactor.redact(pdf, findings)
+    text = text_of(output)
+
+    assert "Natarajan" not in text and "Priya" not in text
+    assert ", staff ID" in text
+
+
 def test_repeated_values_are_redacted_on_every_page():
     pdf = s.build_hr_record()
     findings = findings_for(pdf, [Candidate(s.HR_EMPLOYEE_ID, "EMPLOYEE_ID", "", ["gemini"], "high")])
