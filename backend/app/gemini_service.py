@@ -1,7 +1,10 @@
 """Ask Gemini for context-sensitive findings. Gemini only suggests values; it never touches the PDF."""
 
+import hashlib
 import json
 import logging
+import threading
+import time
 from dataclasses import dataclass
 
 import httpx
@@ -30,6 +33,13 @@ Rules:
   transaction descriptions, amounts, or statement dates.
 - If nothing is sensitive, return an empty list."""
 
+# Errors worth retrying on another model: overloaded, rate-limited, or model missing.
+RETRYABLE_CLIENT_CODES = {404, 429}
+
+# Raw Gemini responses keyed by PDF hash, so re-uploading the same demo file does not depend on Gemini load.
+_cache: dict[str, tuple[float, str, str]] = {}
+_cache_lock = threading.Lock()
+
 
 @dataclass
 class GeminiOutcome:
@@ -38,6 +48,7 @@ class GeminiOutcome:
     candidates: list[Candidate]
     suggested: int = 0
     rejected: int = 0
+    model: str | None = None
 
 
 def _client() -> genai.Client:
@@ -47,10 +58,12 @@ def _client() -> genai.Client:
     )
 
 
-def _request(pdf_bytes: bytes, texts: list[str]) -> str:
+def _request(pdf_bytes: bytes, texts: list[str], model: str) -> str:
     extracted = "\n".join(f"<page number=\"{i}\">\n{t}\n</page>" for i, t in enumerate(texts, start=1))
-    response = _client().models.generate_content(
-        model=config.GEMINI_MODEL,
+    # Hold a reference: the SDK closes its HTTP connection when the Client object is garbage-collected.
+    client = _client()
+    response = client.models.generate_content(
+        model=model,
         contents=[
             types.Part.from_bytes(data=pdf_bytes, mime_type="application/pdf"),
             "Extracted text layer of the same PDF (it can include text that is visually covered):\n"
@@ -97,33 +110,68 @@ def parse_and_validate(raw: str, texts: list[str]) -> tuple[list[Candidate], int
     return list(accepted.values()), len(items), rejected
 
 
+def _cached(key: str) -> tuple[str, str] | None:
+    with _cache_lock:
+        entry = _cache.get(key)
+        if entry and time.monotonic() - entry[0] < config.GEMINI_CACHE_TTL_SECONDS:
+            return entry[1], entry[2]
+        _cache.pop(key, None)
+        return None
+
+
+def _store(key: str, model: str, raw: str):
+    with _cache_lock:
+        _cache[key] = (time.monotonic(), model, raw)
+
+
+def _call_with_fallback(pdf_bytes: bytes, texts: list[str]) -> tuple[str, str]:
+    """Try each configured model in order until one answers. Returns (model, raw response)."""
+    deadline = time.monotonic() + config.GEMINI_TOTAL_BUDGET_SECONDS
+    last_error: Exception | None = None
+    for model in config.GEMINI_MODELS:
+        if time.monotonic() >= deadline:
+            break
+        try:
+            raw = _request(pdf_bytes, texts, model)
+            json.loads(raw)  # malformed output: try the next model
+            return model, raw
+        except genai_errors.ClientError as e:
+            if e.code not in RETRYABLE_CLIENT_CODES:
+                raise
+            log.warning("Gemini model %s unavailable (status=%s), trying next", model, e.code)
+            last_error = e
+        except (genai_errors.ServerError, httpx.TimeoutException, json.JSONDecodeError) as e:
+            log.warning("Gemini model %s failed (%s), trying next", model, getattr(e, "code", type(e).__name__))
+            last_error = e
+    raise last_error or TimeoutError()
+
+
 def analyze(pdf_bytes: bytes, texts: list[str]) -> GeminiOutcome:
     if not config.GEMINI_API_KEY:
         return GeminiOutcome("unavailable", "Gemini API key is not configured. Showing pattern-based results only.", [])
+    key = hashlib.sha256(pdf_bytes).hexdigest()
     try:
-        raw = _request(pdf_bytes, texts)
+        hit = _cached(key)
+        model, raw = hit if hit else _call_with_fallback(pdf_bytes, texts)
         candidates, suggested, rejected = parse_and_validate(raw, texts)
+        if not hit:
+            _store(key, model, raw)
     except genai_errors.ClientError as e:
         log.warning("Gemini client error: status=%s", e.code)
         if e.code == 429:
             message = "Gemini quota or rate limit reached."
-        elif e.code in (401, 403):
+        elif e.code in (400, 401, 403) and "API key" in str(e):
             message = "Gemini rejected the API key."
         elif e.code == 404:
-            message = f"Gemini model '{config.GEMINI_MODEL}' was not found."
+            message = "The configured Gemini models were not found."
         else:
             message = f"Gemini request failed ({e.code})."
         return GeminiOutcome("error", f"{message} Showing pattern-based results only.", [])
-    except genai_errors.ServerError as e:
-        log.warning("Gemini server error: status=%s", e.code)
-        return GeminiOutcome("error", "Gemini is temporarily unavailable. Showing pattern-based results only.", [])
-    except httpx.TimeoutException:
-        log.warning("Gemini request timed out")
-        return GeminiOutcome("error", "Gemini timed out. Showing pattern-based results only.", [])
-    except ValueError as e:
-        log.warning("Gemini output rejected: %s", e)
-        return GeminiOutcome("error", f"{e} Showing pattern-based results only.", [])
+    except (genai_errors.ServerError, httpx.TimeoutException, TimeoutError):
+        return GeminiOutcome("error", "Gemini is busy or timed out. Showing pattern-based results only.", [])
+    except (ValueError, json.JSONDecodeError):
+        return GeminiOutcome("error", "Gemini returned invalid output. Showing pattern-based results only.", [])
     except Exception as e:
         log.warning("Gemini call failed: %s", type(e).__name__)
         return GeminiOutcome("error", "Gemini analysis failed. Showing pattern-based results only.", [])
-    return GeminiOutcome("ok", None, candidates, suggested, rejected)
+    return GeminiOutcome("ok", None, candidates, suggested, rejected, model)

@@ -116,7 +116,7 @@ def analyze(file: UploadFile | None = File(None)):
             page_count=doc.page_count,
             gemini_status=gemini.status,
             gemini_message=gemini.message,
-            gemini_model=config.GEMINI_MODEL if config.GEMINI_API_KEY else None,
+            gemini_model=gemini.model,
             gemini_stats=stats,
             pages=[
                 PageInfo(

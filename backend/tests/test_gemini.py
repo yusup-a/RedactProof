@@ -57,6 +57,42 @@ def test_quota_error_falls_back(monkeypatch):
     assert outcome.candidates == []
 
 
+def test_overloaded_model_falls_back_to_next(monkeypatch):
+    monkeypatch.setattr(config, "GEMINI_API_KEY", "test-key")
+    calls = []
+
+    def fake_request(_pdf, _texts, model):
+        calls.append(model)
+        if model == "model-a":
+            raise genai_errors.ServerError(503, {"error": {"code": 503, "message": "high demand", "status": "UNAVAILABLE"}})
+        return gemini_json(item(s.EMPLOYEE_ID))
+
+    monkeypatch.setattr(gemini_service, "_request", fake_request)
+    outcome = gemini_service.analyze(b"%PDF-1", TEXTS)
+    assert outcome.status == "ok"
+    assert outcome.model == "model-b"
+    assert calls == ["model-a", "model-b"]
+
+    # Same PDF again: served from cache, no new Gemini call.
+    again = gemini_service.analyze(b"%PDF-1", TEXTS)
+    assert again.model == "model-b" and [c.value for c in again.candidates] == [s.EMPLOYEE_ID]
+    assert calls == ["model-a", "model-b"]
+
+
+def test_bad_api_key_does_not_retry(monkeypatch):
+    monkeypatch.setattr(config, "GEMINI_API_KEY", "test-key")
+    calls = []
+
+    def bad_key(_pdf, _texts, model):
+        calls.append(model)
+        raise genai_errors.ClientError(400, {"error": {"code": 400, "message": "API key not valid.", "status": "INVALID_ARGUMENT"}})
+
+    monkeypatch.setattr(gemini_service, "_request", bad_key)
+    outcome = gemini_service.analyze(b"%PDF-", TEXTS)
+    assert outcome.status == "error" and "API key" in outcome.message
+    assert calls == ["model-a"]
+
+
 def test_garbage_output_falls_back(monkeypatch):
     monkeypatch.setattr(config, "GEMINI_API_KEY", "test-key")
     monkeypatch.setattr(gemini_service, "_request", lambda *_: "not json")
@@ -75,6 +111,7 @@ def test_analyze_endpoint_merges_gemini_and_regex(client, monkeypatch):
     by_text = {f["text"]: f for f in body["findings"]}
 
     assert body["gemini_status"] == "ok"
+    assert body["gemini_model"] == "model-a"
     assert by_text[s.EMPLOYEE_ID]["source"] == ["gemini"]
     assert by_text[s.ACCOUNT_NUMBER]["source"] == ["regex", "gemini"]
     assert by_text[s.EMAIL]["source"] == ["regex"]

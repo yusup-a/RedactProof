@@ -11,7 +11,7 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from fastapi.testclient import TestClient
 
-from app import config  # noqa: E402
+from app import config, gemini_service  # noqa: E402
 from app.main import app  # noqa: E402
 
 
@@ -23,5 +23,7 @@ def client():
 @pytest.fixture(autouse=True)
 def no_gemini_by_default(monkeypatch, request):
     """Unit tests never call the real Gemini API unless marked live."""
+    gemini_service._cache.clear()
     if "live" not in request.keywords:
         monkeypatch.setattr(config, "GEMINI_API_KEY", "")
+        monkeypatch.setattr(config, "GEMINI_MODELS", ["model-a", "model-b"])

@@ -24,7 +24,7 @@ Owner: backend. The frontend builds against this document. Any change to it is a
 ## GET /api/health
 
 ```json
-{ "status": "ok", "gemini_configured": true, "gemini_model": "gemini-flash-latest" }
+{ "status": "ok", "gemini_configured": true, "gemini_model": "gemini-3.6-flash" }
 ```
 
 ---
@@ -44,7 +44,7 @@ Limits: max **5 MB**, max **3 pages**, must be a real, unencrypted PDF.
   "page_count": 1,
   "gemini_status": "ok",
   "gemini_message": null,
-  "gemini_model": "gemini-flash-latest",
+  "gemini_model": "gemini-3.6-flash",
   "gemini_stats": { "suggested": 6, "accepted": 5, "rejected": 1 },
   "pages": [
     {
