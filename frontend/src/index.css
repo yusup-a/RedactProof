@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', 'Inter var', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+
+  --color-canvas: #070c17;
+  --color-surface: #0c1424;
+  --color-surface-2: #111b2f;
+  --color-surface-3: #16223a;
+  --color-line: #1d2a45;
+  --color-line-strong: #2a3a5c;
+  --color-muted: #8a9bbb;
+  --color-subtle: #5f7091;
+}
+
+@layer base {
+  html {
+    background: var(--color-canvas);
+    color: #e3e9f5;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgb(34 211 238 / 0.07), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgb(59 130 246 / 0.06), transparent 60%),
+      var(--color-canvas);
+  }
+  ::selection {
+    background: rgb(34 211 238 / 0.3);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cyan-400);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface/80 shadow-[0_1px_0_0_rgb(255_255_255/0.03)_inset,0_20px_40px_-24px_rgb(0_0_0/0.6)] backdrop-blur;
+  }
+  .eyebrow {
+    @apply text-[11px] font-semibold tracking-[0.14em] text-subtle uppercase;
+  }
+}
+
+@keyframes highlight-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(34 211 238 / 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(34 211 238 / 0);
+  }
+}
+
+.animate-highlight {
+  animation: highlight-pulse 1.4s ease-out 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
