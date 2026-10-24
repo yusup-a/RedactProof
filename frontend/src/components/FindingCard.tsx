@@ -28,12 +28,12 @@ export function FindingCard({ finding, selected, active, revealed, disabled, onS
     <li
       ref={ref}
       className={cx(
-        'group flex gap-3 rounded-xl border p-3 transition-colors',
-        active ? 'border-cyan-400/60 bg-cyan-400/[0.06]' : 'border-line bg-surface-2/60 hover:border-line-strong',
+        'flex gap-3 rounded-lg border p-3 transition-colors',
+        active ? 'border-accent bg-accent-soft/60 shadow-xs' : 'border-line bg-surface hover:border-line-strong',
       )}
     >
       <Checkbox
-        className="mt-1"
+        className="mt-0.5"
         checked={selected}
         disabled={disabled}
         onChange={onSelect}
@@ -47,18 +47,15 @@ export function FindingCard({ finding, selected, active, revealed, disabled, onS
             className="min-w-0 rounded text-left"
             aria-label={`Show ${TYPE_LABELS[finding.type]} in the document`}
           >
-            <span
-              className={cx('block truncate font-mono text-[13px]', revealed ? 'text-white' : 'tracking-wider text-slate-300')}
-              title={revealed ? finding.text : undefined}
-            >
+            <span className={cx('block truncate font-mono text-[13px] font-medium', revealed ? 'text-ink' : 'tracking-wide text-body')} title={revealed ? finding.text : undefined}>
               {revealed ? finding.text : finding.display}
             </span>
           </button>
-          <div className="flex shrink-0 items-center gap-1">
+          <div className="flex shrink-0 items-center gap-1.5">
             <button
               type="button"
               onClick={onReveal}
-              className="rounded p-1 text-subtle hover:bg-surface-3 hover:text-slate-200"
+              className="rounded p-1 text-subtle hover:bg-surface-3 hover:text-body"
               aria-label={revealed ? 'Mask value' : 'Reveal value'}
               aria-pressed={revealed}
               title={revealed ? 'Mask value' : 'Reveal value'}
@@ -69,29 +66,29 @@ export function FindingCard({ finding, selected, active, revealed, disabled, onS
           </div>
         </div>
 
-        <p className="mt-1 text-[12.5px] leading-snug text-muted">{finding.reason}</p>
+        <p className="mt-1 text-[13px] leading-snug text-muted">{finding.reason}</p>
 
-        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
           <SourceBadges finding={finding} />
           {finding.confidence && (
-            <span className="text-[11px] text-subtle" title="Gemini's confidence in this finding">
+            <span className="text-xs text-subtle" title="Gemini's confidence in this finding">
               {finding.confidence} confidence
             </span>
           )}
           {finding.visually_hidden && (
-            <Badge className="bg-red-500/12 text-red-200 ring-red-400/30" title="Covered by a dark shape, but the text is still extractable">
+            <Badge className="bg-danger-soft text-danger-ink ring-danger-line" title="Covered by a dark shape, but the text is still extractable">
               <ScanEye className="size-3" aria-hidden />
               Hidden but extractable
             </Badge>
           )}
-          <span className="ml-auto flex items-center gap-1 text-[11px] text-subtle">
-            {count > 1 && <span>{count} places ·</span>}
+          <span className="ml-auto flex items-center gap-0.5 text-xs text-subtle">
+            {count > 1 && <span className="mr-0.5">{count} places ·</span>}
             {pages.map((p) => (
               <button
                 key={p}
                 type="button"
                 onClick={() => onActivate(p)}
-                className="rounded px-1 py-0.5 font-medium text-muted hover:bg-surface-3 hover:text-cyan-200"
+                className="rounded px-1 py-0.5 font-medium text-muted hover:bg-surface-3 hover:text-accent"
                 aria-label={`Show on page ${p}`}
               >
                 p.{p}

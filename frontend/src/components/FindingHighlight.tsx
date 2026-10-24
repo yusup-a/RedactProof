@@ -26,19 +26,19 @@ export function FindingHighlight({ finding, location, pageWidth, pageHeight, sel
   const style = bboxToPercent(location.bbox, pageWidth, pageHeight, 2)
   const toneClass =
     tone === 'hidden'
-      ? 'border-red-400 border-dashed bg-red-500/10'
+      ? 'border-danger border-dashed bg-danger/10'
       : tone === 'redacted'
-        ? 'border-emerald-400/80 bg-emerald-400/5'
+        ? 'border-success bg-success/8'
         : selected
           ? RISK_BOX[finding.risk]
-          : 'border-dashed border-slate-400/70 bg-transparent'
+          : 'border-dashed border-subtle bg-transparent'
 
   const label = `${TYPE_LABELS[finding.type]}, ${finding.risk} risk${location.visually_hidden ? ', hidden under a black box' : ''}`
   const className = cx(
     'absolute rounded-[3px] border-[1.5px] transition-[box-shadow,background-color] duration-150',
     toneClass,
-    active && 'z-10 animate-highlight ring-2 ring-cyan-300',
-    onClick && 'cursor-pointer hover:bg-cyan-300/20',
+    active && 'z-10 animate-highlight ring-2 ring-accent ring-offset-1 ring-offset-white',
+    onClick && 'cursor-pointer hover:bg-accent/15',
   )
 
   if (!onClick) return <span className={className} style={style} title={label} aria-hidden />

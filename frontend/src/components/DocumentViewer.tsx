@@ -43,7 +43,7 @@ export function DocumentViewer({
 
   return (
     <div
-      className="relative mx-auto overflow-hidden rounded-md bg-white shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)] ring-1 ring-black/40"
+      className="relative mx-auto overflow-hidden rounded-sm bg-white shadow-page ring-1 ring-line"
       style={{
         aspectRatio: `${page.width} / ${page.height}`,
         width: `min(100%, max(320px, calc((100vh - ${reservedHeight}px) * ${ratio})))`,
@@ -59,10 +59,10 @@ export function DocumentViewer({
           className={cx('absolute inset-0 h-full w-full select-none transition-opacity duration-300', loaded ? 'opacity-100' : 'opacity-0')}
         />
       )}
-      {!loaded && !failed && <div className="absolute inset-0 animate-pulse bg-slate-200" aria-hidden />}
+      {!loaded && !failed && <div className="absolute inset-0 animate-pulse bg-surface-3" aria-hidden />}
       {failed && (
-        <div role="alert" className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-slate-100 p-6 text-center text-sm text-slate-600">
-          <ImageOff className="size-6" aria-hidden />
+        <div role="alert" className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-surface-2 p-6 text-center text-sm text-muted">
+          <ImageOff className="size-6 text-subtle" aria-hidden />
           Preview unavailable. The session may have expired — upload the PDF again.
         </div>
       )}

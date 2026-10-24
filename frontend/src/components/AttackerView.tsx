@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { AlertOctagon, Copy, EyeOff, FileText, Info, ScanEye, ShieldCheck, Terminal } from 'lucide-react'
+import { AlertCircle, EyeOff, Info, ScanEye, ShieldCheck } from 'lucide-react'
 import type { AnalysisResponse, Finding, RedactionResult } from '../api/types'
 import { api } from '../api/client'
 import { TYPE_LABELS, segmentText } from '../utils/findings'
@@ -32,19 +32,16 @@ export function AttackerView({ analysis, result, page, onPageChange }: AttackerV
   const segments = useMemo(() => segmentText(current.extracted_text, analysis.findings), [current, analysis.findings])
 
   return (
-    <div className="space-y-5">
-      <div className="card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
-            <Terminal className="size-5 text-cyan-300" aria-hidden />
-            Attacker View
-          </h2>
-          <p className="mt-1 max-w-2xl text-[13.5px] leading-relaxed text-muted">
+          <h2 className="text-[20px] font-semibold tracking-tight text-ink">Attacker View</h2>
+          <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted">
             Left is what a person sees. Right is what anyone with copy-paste, a search box or a PDF parser gets — the
             text layer, exactly as the backend extracted it.
           </p>
         </div>
-        <div role="radiogroup" aria-label="Document version" className="flex shrink-0 rounded-lg border border-line bg-surface-2 p-1">
+        <div role="radiogroup" aria-label="Document version" className="flex shrink-0 rounded-lg border border-line bg-surface-3 p-0.5">
           {(['before', 'after'] as const).map((m) => (
             <button
               key={m}
@@ -55,8 +52,8 @@ export function AttackerView({ analysis, result, page, onPageChange }: AttackerV
               onClick={() => setMode(m)}
               title={m === 'after' && !result ? 'Redact findings first' : undefined}
               className={cx(
-                'rounded-md px-3.5 py-1.5 text-[13px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40',
-                mode === m ? 'bg-surface-3 text-white shadow-sm ring-1 ring-line-strong' : 'text-muted hover:text-slate-200',
+                'rounded-md px-3.5 py-1.5 text-[13px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40',
+                mode === m ? 'bg-surface text-ink shadow-xs' : 'text-muted hover:text-ink',
               )}
             >
               {m === 'before' ? 'Original PDF' : 'Redacted output'}
@@ -68,19 +65,19 @@ export function AttackerView({ analysis, result, page, onPageChange }: AttackerV
       {showAfter ? (
         <AfterBanner result={result} findings={analysis.findings} />
       ) : hiddenFindings.length > 0 ? (
-        <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-400/40 bg-red-500/10 px-4 py-3.5">
-          <AlertOctagon className="mt-0.5 size-5 shrink-0 text-red-300" aria-hidden />
-          <div className="text-[13.5px] leading-relaxed text-red-50">
-            <p className="font-semibold text-red-100">
+        <div role="alert" className="flex items-start gap-3 rounded-lg border border-danger-line bg-danger-soft px-4 py-3.5">
+          <AlertCircle className="mt-0.5 size-5 shrink-0 text-danger" aria-hidden />
+          <div className="text-sm leading-relaxed">
+            <p className="font-semibold text-danger-ink">
               {hiddenFindings.length} sensitive value{hiddenFindings.length === 1 ? ' is' : 's are'} covered by a black box but
               still extractable.
             </p>
-            <p className="mt-0.5 text-red-100/80">
+            <p className="mt-0.5 text-body">
               The backend found{' '}
               {hiddenFindings.map((f, i) => (
                 <span key={f.id}>
                   {i > 0 && ', '}
-                  <span className="font-medium text-red-50">{TYPE_LABELS[f.type].toLowerCase()}</span>
+                  <span className="font-medium text-ink">{TYPE_LABELS[f.type].toLowerCase()}</span>
                 </span>
               ))}{' '}
               text underneath a dark filled shape. It looks redacted, but the characters are still in the file.
@@ -88,8 +85,8 @@ export function AttackerView({ analysis, result, page, onPageChange }: AttackerV
           </div>
         </div>
       ) : (
-        <div className="flex items-start gap-3 rounded-xl border border-line bg-surface/70 px-4 py-3.5 text-[13.5px] text-muted">
-          <Info className="mt-0.5 size-5 shrink-0 text-sky-300" aria-hidden />
+        <div className="flex items-start gap-3 rounded-lg border border-line bg-surface px-4 py-3.5 text-sm text-muted shadow-xs">
+          <Info className="mt-0.5 size-5 shrink-0 text-subtle" aria-hidden />
           <p>
             No text hidden under black boxes was detected in this PDF. The extracted text still shows everything a machine
             can read — including any sensitive value you haven't redacted yet.
@@ -97,30 +94,30 @@ export function AttackerView({ analysis, result, page, onPageChange }: AttackerV
         </div>
       )}
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <section aria-label="Visual view" className="card p-4">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
-              <FileText className="size-4 text-muted" aria-hidden /> Visual View
-              <span className="font-normal text-muted">· {showAfter ? 'redacted output' : 'original'}</span>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <section aria-label="Visual view" className="card flex flex-col overflow-hidden">
+          <div className="flex h-14 items-center justify-between gap-2 border-b border-line px-4">
+            <h3 className="text-sm font-semibold text-ink">
+              Visual View <span className="font-normal text-muted">· {showAfter ? 'redacted output' : 'original'}</span>
             </h3>
             <PageNav page={current.page} count={pages.length} onChange={onPageChange} />
           </div>
-          <DocumentViewer
-            page={current}
-            imageUrl={api.url(current.preview_url)}
-            alt={`${showAfter ? 'Redacted' : 'Original'} page ${current.page}`}
-            findings={!showAfter && revealed ? hiddenOnPage : []}
-            toneFor={() => 'hidden'}
-            reservedHeight={420}
-          />
+          <div className="flex-1 bg-surface-2 p-5">
+            <DocumentViewer
+              page={current}
+              imageUrl={api.url(current.preview_url)}
+              alt={`${showAfter ? 'Redacted' : 'Original'} page ${current.page}`}
+              findings={!showAfter && revealed ? hiddenOnPage : []}
+              toneFor={() => 'hidden'}
+              reservedHeight={440}
+            />
+          </div>
         </section>
 
-        <section aria-label="Extracted text" className="card flex flex-col p-4">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
-              <Copy className="size-4 text-muted" aria-hidden /> Extracted Text
-              <span className="font-normal text-muted">· page {current.page}</span>
+        <section aria-label="Extracted text" className="card flex flex-col overflow-hidden">
+          <div className="flex h-14 items-center justify-between gap-2 border-b border-line px-4">
+            <h3 className="text-sm font-semibold text-ink">
+              Extracted Text <span className="font-normal text-muted">· page {current.page}</span>
             </h3>
             <Button
               variant={revealed ? 'secondary' : 'danger'}
@@ -133,7 +130,7 @@ export function AttackerView({ analysis, result, page, onPageChange }: AttackerV
             </Button>
           </div>
           <pre
-            className="max-h-[calc(100vh-420px)] min-h-[320px] flex-1 overflow-auto rounded-lg border border-line bg-[#050911] p-4 font-mono text-[12.5px] leading-[1.7] whitespace-pre-wrap text-slate-300"
+            className="max-h-[calc(100vh-400px)] min-h-[320px] flex-1 overflow-auto bg-surface-2 p-5 font-mono text-[12.5px] leading-[1.75] whitespace-pre-wrap text-body"
             aria-label={`Text extracted from page ${current.page}`}
           >
             {current.extracted_text.trim() === '' ? (
@@ -146,7 +143,6 @@ export function AttackerView({ analysis, result, page, onPageChange }: AttackerV
                     finding={seg.finding}
                     revealed={revealed}
                     hidden={!showAfter && hiddenOn(seg.finding, current.page)}
-                    after={showAfter}
                     stillPresent={remaining.has(seg.finding.id)}
                     notSelected={showAfter && !redacted.has(seg.finding.id)}
                   />
@@ -169,26 +165,20 @@ interface ValueMarkProps {
   finding: Finding
   revealed: boolean
   hidden: boolean
-  after: boolean
   stillPresent: boolean
   notSelected: boolean
 }
 
-function ValueMark({ finding, revealed, hidden, after, stillPresent, notSelected }: ValueMarkProps) {
+function ValueMark({ finding, revealed, hidden, stillPresent, notSelected }: ValueMarkProps) {
   const label = TYPE_LABELS[finding.type]
   if (!revealed) {
     return (
-      <span className="rounded bg-slate-700/60 px-1 text-slate-400" title={`${label} (masked)`}>
+      <span className="rounded bg-line px-1 text-muted" title={`${label} (masked)`}>
         {finding.display}
       </span>
     )
   }
-  const tone =
-    hidden || stillPresent
-      ? 'bg-red-500/25 text-red-100 ring-1 ring-red-400/60'
-      : after && notSelected
-        ? 'bg-amber-400/10 text-amber-100 ring-1 ring-amber-400/30'
-        : 'bg-amber-400/15 text-amber-100 ring-1 ring-amber-400/40'
+  const danger = hidden || stillPresent
   const note = hidden
     ? 'hidden under a black box in the visual view'
     : stillPresent
@@ -197,25 +187,37 @@ function ValueMark({ finding, revealed, hidden, after, stillPresent, notSelected
         ? 'not selected for redaction'
         : 'visible and extractable'
   return (
-    <mark className={cx('rounded px-0.5 font-semibold', tone)} title={`${label} — ${note}`}>
+    <mark
+      className={cx(
+        'rounded px-0.5 font-semibold ring-1',
+        danger ? 'bg-danger-soft text-danger-ink ring-danger-line' : 'bg-warning-soft text-warning-ink ring-warning-line',
+      )}
+      title={`${label} — ${note}`}
+    >
       {finding.text}
-      {hidden && <span className="ml-1 align-middle text-[10px] font-bold tracking-wide text-red-300 uppercase">hidden</span>}
+      {hidden && <span className="ml-1.5 rounded-sm bg-danger px-1 align-middle font-sans text-[10px] font-semibold text-white">Hidden</span>}
     </mark>
   )
 }
 
 function Legend({ after }: { after: boolean }) {
+  const item = (swatch: string, text: string) => (
+    <span className="flex items-center gap-1.5">
+      <span className={cx('size-2.5 rounded-sm', swatch)} aria-hidden />
+      {text}
+    </span>
+  )
   return (
-    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11.5px] text-subtle">
+    <div className="flex flex-wrap gap-x-5 gap-y-1 border-t border-line px-4 py-3 text-xs text-muted">
       {after ? (
         <>
-          <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm bg-red-500/60" /> Still extractable (verification failed)</span>
-          <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm bg-amber-400/40" /> Detected but not selected</span>
+          {item('bg-danger', 'Still extractable (verification failed)')}
+          {item('bg-warning', 'Detected but not selected')}
         </>
       ) : (
         <>
-          <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm bg-red-500/60" /> Hidden under a black box, still extractable</span>
-          <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm bg-amber-400/50" /> Visible sensitive value</span>
+          {item('bg-danger', 'Hidden under a black box, still extractable')}
+          {item('bg-warning', 'Visible sensitive value')}
         </>
       )}
     </div>
@@ -226,24 +228,22 @@ function AfterBanner({ result, findings }: { result: RedactionResult; findings: 
   const v = result.verification
   if (v.status === 'passed') {
     return (
-      <div role="status" className="flex items-start gap-3 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3.5 text-[13.5px]">
-        <ShieldCheck className="mt-0.5 size-5 shrink-0 text-emerald-300" aria-hidden />
-        <p className="text-emerald-50">
-          <span className="font-semibold">Targeted text verification passed.</span>{' '}
-          <span className="text-emerald-100/80">
-            None of the {v.values_tested} selected value{v.values_tested === 1 ? '' : 's'} can be extracted from the redacted
-            output. Values you didn't select are still present.
-          </span>
+      <div role="status" className="flex items-start gap-3 rounded-lg border border-success-line bg-success-soft px-4 py-3.5 text-sm">
+        <ShieldCheck className="mt-0.5 size-5 shrink-0 text-success-ink" aria-hidden />
+        <p className="text-body">
+          <span className="font-semibold text-success-ink">Targeted text verification passed.</span> None of the{' '}
+          {v.values_tested} selected value{v.values_tested === 1 ? '' : 's'} can be extracted from the redacted output.
+          Values you didn't select are still present.
         </p>
       </div>
     )
   }
   const byId = new Map(findings.map((f) => [f.id, f]))
   return (
-    <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-400/40 bg-red-500/10 px-4 py-3.5 text-[13.5px]">
-      <AlertOctagon className="mt-0.5 size-5 shrink-0 text-red-300" aria-hidden />
-      <p className="text-red-50">
-        <span className="font-semibold">Verification failed.</span> {v.values_still_detected} selected value
+    <div role="alert" className="flex items-start gap-3 rounded-lg border border-danger-line bg-danger-soft px-4 py-3.5 text-sm">
+      <AlertCircle className="mt-0.5 size-5 shrink-0 text-danger" aria-hidden />
+      <p className="text-body">
+        <span className="font-semibold text-danger-ink">Verification failed.</span> {v.values_still_detected} selected value
         {v.values_still_detected === 1 ? ' is' : 's are'} still extractable:{' '}
         {v.remaining.map((r) => `${TYPE_LABELS[byId.get(r.finding_id)?.type ?? 'OTHER']} (page ${r.pages.join(', ')})`).join('; ')}.
       </p>
@@ -259,16 +259,16 @@ function WhyBoxesFail() {
     ['Real redaction deletes the text.', 'RedactProof removes the characters from the PDF, rewrites the file, then re-reads it to verify.'],
   ]
   return (
-    <section aria-label="Why black boxes are not redaction" className="card p-5">
-      <h3 className="text-sm font-semibold text-white">Why a black box isn't redaction</h3>
-      <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <section aria-label="Why black boxes are not redaction" className="card p-6">
+      <h3 className="text-[16px] font-semibold text-ink">Why a black box isn't redaction</h3>
+      <dl className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {points.map(([title, body], i) => (
-          <div key={title} className="rounded-lg border border-line/70 bg-surface-2/40 p-3.5">
-            <dt className="text-[13px] font-medium text-slate-100">
-              <span className="mr-1.5 text-cyan-300">{i + 1}</span>
+          <div key={title}>
+            <dt className="text-sm font-semibold text-ink">
+              <span className="mb-2 flex size-6 items-center justify-center rounded-full bg-surface-3 text-xs font-semibold text-body">{i + 1}</span>
               {title}
             </dt>
-            <dd className="mt-1 text-[12.5px] leading-snug text-muted">{body}</dd>
+            <dd className="mt-1 text-sm leading-relaxed text-muted">{body}</dd>
           </div>
         ))}
       </dl>

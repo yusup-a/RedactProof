@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type DragEvent } from 'react'
-import { AlertTriangle, Eraser, FileSearch, FileUp, Lock, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { AlertCircle, Loader2, Lock, UploadCloud, X } from 'lucide-react'
 import type { HealthState } from './AppShell'
 import { formatBytes } from '../utils/findings'
 import { Button, cx } from './ui'
@@ -24,9 +24,9 @@ function validate(file: File): string | null {
 }
 
 const STEPS = [
-  { icon: FileSearch, title: 'Detect', body: 'Pattern scan plus Gemini contextual analysis' },
-  { icon: Eraser, title: 'Remove', body: 'Selected text is deleted from the PDF, not covered' },
-  { icon: ShieldCheck, title: 'Verify', body: 'Output is reopened and re-searched for every value' },
+  { title: 'Detect', body: 'A pattern scanner and Gemini each look for sensitive values, including ones that need context to spot.' },
+  { title: 'Remove', body: 'The values you select are deleted from the PDF itself — not painted over.' },
+  { title: 'Verify', body: 'The saved file is reopened and searched again for every value you removed.' },
 ]
 
 export function UploadZone({ health, analyzing, error, onFile, onCancel }: UploadZoneProps) {
@@ -52,16 +52,17 @@ export function UploadZone({ health, analyzing, error, onFile, onCancel }: Uploa
   }
 
   return (
-    <div className="mx-auto max-w-3xl pt-4 sm:pt-10">
+    <div className="mx-auto max-w-[720px] pt-6 sm:pt-14">
       <div className="text-center">
-        <p className="eyebrow mb-4 text-cyan-300/80">PDF redaction you can verify</p>
-        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-5xl">
-          Covering data isn't the same
-          <br className="hidden sm:block" /> as <span className="text-cyan-300">removing it.</span>
+        <p className="mb-4 inline-flex items-center rounded-full border border-line bg-surface px-3 py-1 text-[13px] font-medium text-body shadow-xs">
+          PDF redaction you can verify
+        </p>
+        <h1 className="text-[34px] leading-[1.15] font-semibold tracking-[-0.02em] text-ink sm:text-[44px]">
+          Covering data isn't the same as removing it.
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
-          Black boxes drawn over PDF text often leave the text in the file. RedactProof finds sensitive values with
-          pattern scanning and Google Gemini, removes them for real, and proves it.
+        <p className="mx-auto mt-4 max-w-[560px] text-[16px] leading-relaxed text-muted">
+          A black box drawn over PDF text often leaves the text in the file. RedactProof finds sensitive values with
+          pattern scanning and Google Gemini, removes them for real, and checks the result.
         </p>
       </div>
 
@@ -73,20 +74,20 @@ export function UploadZone({ health, analyzing, error, onFile, onCancel }: Uploa
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cx(
-          'card relative mt-10 overflow-hidden border-dashed p-8 text-center transition-colors sm:p-12',
-          dragging ? 'border-cyan-400 bg-cyan-400/5' : 'border-line-strong',
+          'mt-10 rounded-xl border-[1.5px] border-dashed bg-surface px-6 py-10 text-center shadow-xs transition-colors sm:px-10 sm:py-12',
+          dragging ? 'border-accent bg-accent-soft' : 'border-line-strong',
         )}
       >
         {analyzing ? (
           <AnalyzingState file={analyzing} gemini={geminiOn} onCancel={onCancel} />
         ) : (
           <>
-            <div className="mx-auto flex size-14 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-400/10">
-              <FileUp className="size-6 text-cyan-300" aria-hidden />
+            <div className="mx-auto flex size-12 items-center justify-center rounded-full border-[6px] border-surface-2 bg-surface-3">
+              <UploadCloud className="size-5 text-body" aria-hidden />
             </div>
-            <p className="mt-5 text-lg font-medium text-white">Drop a PDF here</p>
+            <p className="mt-4 text-[16px] font-semibold text-ink">Drop a PDF here</p>
             <p className="mt-1 text-sm text-muted">PDF only · up to 5 MB · up to 3 pages · text-based (no scans)</p>
-            <Button variant="primary" size="lg" className="mt-6" onClick={() => inputRef.current?.click()} icon={<FileUp className="size-4" aria-hidden />}>
+            <Button variant="primary" className="mt-6" onClick={() => inputRef.current?.click()}>
               Browse files
             </Button>
             <input
@@ -106,32 +107,32 @@ export function UploadZone({ health, analyzing, error, onFile, onCancel }: Uploa
       </div>
 
       {shownError && !analyzing && (
-        <div role="alert" className="mt-4 flex items-start gap-3 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-red-300" aria-hidden />
+        <div role="alert" className="mt-4 flex items-start gap-3 rounded-lg border border-danger-line bg-danger-soft px-4 py-3 text-sm text-danger-ink">
+          <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
           <span>{shownError}</span>
         </div>
       )}
 
-      <div className="mt-4 flex items-start gap-3 rounded-xl border border-line bg-surface/60 px-4 py-3 text-[13px] leading-relaxed text-muted">
-        <Lock className="mt-0.5 size-4 shrink-0 text-cyan-300/80" aria-hidden />
+      <div className="mt-4 flex items-start gap-3 rounded-lg border border-line bg-surface-2 px-4 py-3 text-[13px] leading-relaxed text-muted">
+        <Lock className="mt-0.5 size-4 shrink-0 text-subtle" aria-hidden />
         <p>
-          <span className="font-medium text-slate-200">Privacy notice:</span>{' '}
+          <span className="font-medium text-body">Privacy notice:</span>{' '}
           {geminiOn
             ? 'The PDF you upload is sent to the Google Gemini API for analysis (third-party processing). '
             : 'Gemini is not configured on this server, so your PDF is only scanned locally by the backend. '}
           Documents are kept in server memory for 30 minutes and never stored on disk.{' '}
-          <span className="text-slate-200">Use synthetic demo documents only.</span>
+          <span className="font-medium text-body">Use synthetic demo documents only.</span>
         </p>
       </div>
 
-      <ol className="mt-10 grid gap-3 sm:grid-cols-3">
-        {STEPS.map(({ icon: Icon, title, body }, i) => (
-          <li key={title} className="rounded-xl border border-line/70 bg-surface/40 p-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
-              <Icon className="size-4 text-cyan-300" aria-hidden />
-              <span className="text-subtle">{i + 1}.</span> {title}
-            </div>
-            <p className="mt-1.5 text-[13px] leading-snug text-muted">{body}</p>
+      <ol className="mt-14 grid gap-8 border-t border-line pt-8 sm:grid-cols-3 sm:gap-6">
+        {STEPS.map(({ title, body }, i) => (
+          <li key={title}>
+            <span className="flex size-7 items-center justify-center rounded-full bg-accent-soft text-[13px] font-semibold text-accent">
+              {i + 1}
+            </span>
+            <p className="mt-3 text-[15px] font-semibold text-ink">{title}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
           </li>
         ))}
       </ol>
@@ -148,23 +149,20 @@ function AnalyzingState({ file, gemini, onCancel }: { file: File; gemini: boolea
   }, [])
 
   return (
-    <div role="status" aria-live="polite" className="py-2">
-      <div className="relative mx-auto size-14">
-        <div className="absolute inset-0 animate-spin rounded-full border-2 border-cyan-400/15 border-t-cyan-300" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          {gemini ? <Sparkles className="size-5 text-violet-200" aria-hidden /> : <FileSearch className="size-5 text-cyan-200" aria-hidden />}
-        </div>
+    <div role="status" aria-live="polite">
+      <div className="mx-auto flex size-12 items-center justify-center rounded-full border-[6px] border-accent-soft bg-accent-soft">
+        <Loader2 className="size-5 animate-spin text-accent" aria-hidden />
       </div>
-      <p className="mt-5 text-lg font-medium text-white">Analyzing {file.name}</p>
-      <p className="mt-1 text-sm text-muted">
+      <p className="mt-4 text-[16px] font-semibold text-ink">Analyzing {file.name}</p>
+      <p className="mx-auto mt-1 max-w-md text-sm text-muted">
         {gemini
           ? 'Running the pattern scanner and asking Gemini for contextual identifiers. This can take up to a minute.'
           : 'Running the deterministic pattern scanner.'}
       </p>
-      <p className="mt-3 font-mono text-xs text-subtle">
+      <p className="mt-3 text-[13px] text-subtle tabular-nums">
         {formatBytes(file.size)} · {seconds}s elapsed
       </p>
-      <Button variant="ghost" size="sm" className="mt-5" onClick={onCancel} icon={<X className="size-3.5" aria-hidden />}>
+      <Button variant="secondary" size="sm" className="mt-5" onClick={onCancel} icon={<X className="size-3.5" aria-hidden />}>
         Cancel
       </Button>
     </div>

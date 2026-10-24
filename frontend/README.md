@@ -46,6 +46,12 @@ src/
     BeforeAfterViewer    original vs redacted previews
 ```
 
+## Theming
+
+All colors, fonts and shadows are design tokens in the `@theme` block of [src/index.css](src/index.css) (`canvas`, `surface`, `ink`, `accent`, `danger`, `warning`, `success`, `gemini`, `low`, …). Components only use those token names, so changing a value there re-themes the whole UI.
+
+The earlier dark design is preserved at the git tag `design-dark-v1`. To view it: `git checkout design-dark-v1`. To bring it back on the branch: `git restore --source design-dark-v1 -- frontend/src frontend/index.html frontend/public` and commit.
+
 ## How it uses the API
 
 - **Highlights** come only from backend `locations[].bbox` (PDF points, top-left origin). Each box is placed as a percentage of `page.width`/`page.height` over an image sized with the page's aspect ratio — equivalent to `scale = displayWidth / page.width` and accurate at any size. A finding is one value; all of its locations are drawn, and the `p.N` chips jump to each page.

@@ -1,7 +1,7 @@
 import type { AnalysisResponse, RedactionResult } from '../api/types'
 import { api } from '../api/client'
 import { DocumentViewer } from './DocumentViewer'
-import { PageNav } from './ui'
+import { PageNav, Swatch } from './ui'
 
 interface BeforeAfterViewerProps {
   analysis: AnalysisResponse
@@ -17,17 +17,17 @@ export function BeforeAfterViewer({ analysis, result, page, onPageChange }: Befo
   const removed = analysis.findings.filter((f) => redacted.has(f.id))
 
   return (
-    <section aria-label="Before and after" className="card p-4">
-      <div className="mb-4 flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-white">Before / after</h3>
+    <section aria-label="Before and after" className="card overflow-hidden">
+      <div className="flex h-14 items-center justify-between gap-2 border-b border-line px-5">
+        <h3 className="text-sm font-semibold text-ink">Before / after</h3>
         <PageNav page={page} count={Math.min(analysis.pages.length, result.pages.length)} onChange={onPageChange} />
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 bg-surface-2 p-6 md:grid-cols-2">
         <figure>
-          <figcaption className="mb-2 flex items-center gap-2 text-xs text-muted">
-            <span className="font-medium text-slate-200">Original</span>
-            <span className="inline-flex items-center gap-1">
-              <span className="size-2.5 rounded-sm border border-emerald-400" /> removed regions
+          <figcaption className="mb-3 flex items-center gap-3 text-[13px] text-muted">
+            <span className="font-semibold text-ink">Original</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Swatch className="border-success bg-success/10" /> removed regions
             </span>
           </figcaption>
           <DocumentViewer
@@ -36,12 +36,12 @@ export function BeforeAfterViewer({ analysis, result, page, onPageChange }: Befo
             alt={`Original page ${before.page}`}
             findings={removed}
             toneFor={() => 'redacted'}
-            reservedHeight={300}
+            reservedHeight={320}
           />
         </figure>
         <figure>
-          <figcaption className="mb-2 text-xs font-medium text-slate-200">Redacted output</figcaption>
-          <DocumentViewer page={after} imageUrl={api.url(after.preview_url)} alt={`Redacted page ${after.page}`} reservedHeight={300} />
+          <figcaption className="mb-3 text-[13px] font-semibold text-ink">Redacted output</figcaption>
+          <DocumentViewer page={after} imageUrl={api.url(after.preview_url)} alt={`Redacted page ${after.page}`} reservedHeight={320} />
         </figure>
       </div>
     </section>

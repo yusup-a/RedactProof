@@ -34,11 +34,11 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
   }
 
   return (
-    <section aria-label="Findings" className="card flex max-h-[calc(100vh-15rem)] min-h-[460px] flex-col lg:sticky lg:top-24">
-      <div className="border-b border-line p-4">
+    <section aria-label="Findings" className="card flex max-h-[calc(100vh-15rem)] min-h-[460px] flex-col overflow-hidden lg:sticky lg:top-24">
+      <div className="border-b border-line px-4 pt-4 pb-3">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="text-[15px] font-semibold text-white">
-            Findings <span className="ml-1 text-muted">{findings.length}</span>
+          <h2 className="text-[16px] font-semibold text-ink">
+            Findings <span className="ml-1 font-medium text-muted tabular-nums">{findings.length}</span>
           </h2>
           {findings.length > 0 && (
             <Button
@@ -54,7 +54,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
         </div>
         <div className="mt-3">{status}</div>
         {findings.length > 0 && (
-          <label className="mt-3 flex cursor-pointer items-center gap-2.5 text-[13px] text-slate-200">
+          <label className="mt-3 flex cursor-pointer items-center gap-2.5 text-sm font-medium text-body">
             <Checkbox
               checked={selectedCount === findings.length}
               indeterminate={selectedCount > 0 && selectedCount < findings.length}
@@ -63,18 +63,20 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
               label="Select all findings"
             />
             Select all
-            <span className="text-muted">
-              ({selectedCount} of {findings.length} selected)
+            <span className="font-normal text-muted tabular-nums">
+              {selectedCount} of {findings.length} selected
             </span>
           </label>
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3">
+      <div className="flex-1 overflow-y-auto bg-surface-2 px-3 py-3">
         {findings.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center px-6 py-10 text-center">
-            <SearchCheck className="size-8 text-emerald-300/80" aria-hidden />
-            <p className="mt-3 text-sm font-medium text-white">No sensitive values detected</p>
+            <div className="flex size-10 items-center justify-center rounded-full bg-success-soft">
+              <SearchCheck className="size-5 text-success-ink" aria-hidden />
+            </div>
+            <p className="mt-3 text-sm font-semibold text-ink">No sensitive values detected</p>
             <p className="mt-1 text-[13px] leading-relaxed text-muted">
               Neither detector flagged anything in this PDF's text. That isn't proof the document is clean — check the
               Attacker View to see everything a machine can extract.
@@ -94,8 +96,8 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
                     disabled={disabled}
                     label={`Select all ${group.label} findings`}
                   />
-                  <h3 className="eyebrow flex-1">
-                    {group.label} <span className="text-muted">· {ids.length}</span>
+                  <h3 className="label flex-1">
+                    {group.label} <span className="text-subtle tabular-nums">· {ids.length}</span>
                   </h3>
                 </div>
                 <ul className="space-y-2">
