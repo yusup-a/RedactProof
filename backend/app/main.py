@@ -5,7 +5,7 @@ import uuid
 from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, RedirectResponse, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from . import config, gemini_service, pdf_scanner, redactor, verifier
@@ -75,6 +75,11 @@ def _merge(regex: list[pdf_scanner.Candidate], gemini: list[pdf_scanner.Candidat
         else:
             merged[g.value] = g
     return list(merged.values())
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse("/docs")
 
 
 @app.get("/api/health")
