@@ -1,5 +1,4 @@
 import { useState, type ReactNode } from 'react'
-import { ImageOff } from 'lucide-react'
 import type { DocumentPage, Finding } from '../api/types'
 import { FindingHighlight, type HighlightTone } from './FindingHighlight'
 import { cx } from './ui'
@@ -43,10 +42,10 @@ export function DocumentViewer({
 
   return (
     <div
-      className="relative mx-auto overflow-hidden rounded-sm bg-white shadow-page ring-1 ring-line"
+      className="relative mx-auto overflow-hidden border-[1.5px] border-ink bg-white shadow-hard"
       style={{
         aspectRatio: `${page.width} / ${page.height}`,
-        width: `min(100%, max(320px, calc((100vh - ${reservedHeight}px) * ${ratio})))`,
+        width: `min(calc(100% - 4px), max(320px, calc((100vh - ${reservedHeight}px) * ${ratio})))`,
       }}
     >
       {!failed && (
@@ -56,13 +55,12 @@ export function DocumentViewer({
           draggable={false}
           onLoad={() => setLoadedUrl(imageUrl)}
           onError={() => setFailedUrl(imageUrl)}
-          className={cx('absolute inset-0 h-full w-full select-none transition-opacity duration-300', loaded ? 'opacity-100' : 'opacity-0')}
+          className={cx('absolute inset-0 h-full w-full select-none transition-opacity duration-200', loaded ? 'opacity-100' : 'opacity-0')}
         />
       )}
       {!loaded && !failed && <div className="absolute inset-0 animate-pulse bg-surface-3" aria-hidden />}
       {failed && (
-        <div role="alert" className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-surface-2 p-6 text-center text-sm text-muted">
-          <ImageOff className="size-6 text-subtle" aria-hidden />
+        <div role="alert" className="absolute inset-0 flex items-center justify-center bg-surface-2 p-8 text-center font-mono text-[12px] leading-relaxed text-body">
           Preview unavailable. The session may have expired — upload the PDF again.
         </div>
       )}

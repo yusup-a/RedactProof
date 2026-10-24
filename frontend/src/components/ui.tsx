@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
-import { ChevronLeft, ChevronRight, Loader2, ScanText, Sparkles } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import type { Finding, Risk } from '../api/types'
 import { sourceKind } from '../utils/findings'
 
@@ -10,10 +10,10 @@ export function cx(...classes: (string | false | null | undefined)[]) {
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-accent text-white shadow-xs hover:bg-accent-hover',
-  secondary: 'border border-line-strong bg-surface text-body shadow-xs hover:bg-surface-2 hover:text-ink',
-  ghost: 'text-muted hover:bg-surface-3 hover:text-ink',
-  danger: 'bg-danger text-white shadow-xs hover:bg-danger-hover',
+  primary: 'border-ink bg-ink text-paper hover:bg-body active:translate-y-px',
+  secondary: 'border-ink bg-surface text-ink hover:bg-marker active:translate-y-px',
+  ghost: 'border-transparent text-ink hover:border-ink hover:bg-surface',
+  danger: 'border-danger bg-danger text-white hover:bg-danger-ink hover:border-danger-ink active:translate-y-px',
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -24,12 +24,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({ variant = 'secondary', size = 'md', loading, icon, className, children, disabled, ...props }: ButtonProps) {
-  const sizes = { sm: 'h-8 px-3 text-[13px] gap-1.5', md: 'h-10 px-4 text-sm gap-2', lg: 'h-11 px-5 text-[15px] gap-2' }
+  const sizes = { sm: 'h-8 px-3 text-[13px] gap-1.5', md: 'h-10 px-4 text-[14px] gap-2', lg: 'h-12 px-6 text-[16px] gap-2.5' }
   return (
     <button
       type="button"
       className={cx(
-        'inline-flex shrink-0 items-center justify-center rounded-lg font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50',
+        'inline-flex shrink-0 items-center justify-center border-[1.5px] font-display font-semibold tracking-[0.03em] uppercase transition-colors duration-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:translate-y-0',
         sizes[size],
         BUTTON_VARIANTS[variant],
         className,
@@ -45,26 +45,21 @@ export function Button({ variant = 'secondary', size = 'md', loading, icon, clas
 }
 
 const RISK_STYLES: Record<Risk, string> = {
-  HIGH: 'bg-danger-soft text-danger-ink ring-danger-line',
-  MEDIUM: 'bg-warning-soft text-warning-ink ring-warning-line',
-  LOW: 'bg-low-soft text-low-ink ring-low-line',
+  HIGH: 'border-danger bg-danger text-white',
+  MEDIUM: 'border-warning bg-warning text-ink',
+  LOW: 'border-ink bg-surface text-ink',
 }
-
-const RISK_LABELS: Record<Risk, string> = { HIGH: 'High', MEDIUM: 'Medium', LOW: 'Low' }
 
 /** Outline + fill used for selected regions on the page preview. */
 export const RISK_BOX: Record<Risk, string> = {
-  HIGH: 'border-danger bg-danger/12',
-  MEDIUM: 'border-warning bg-warning/14',
-  LOW: 'border-low bg-low/10',
+  HIGH: 'border-danger bg-danger/15',
+  MEDIUM: 'border-warning bg-warning/20',
+  LOW: 'border-ink bg-ink/8',
 }
 
-export function Badge({ className, children, title }: { className?: string; children: ReactNode; title?: string }) {
+export function Tag({ className, children, title }: { className?: string; children: ReactNode; title?: string }) {
   return (
-    <span
-      title={title}
-      className={cx('inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs leading-4 font-medium ring-1 ring-inset', className)}
-    >
+    <span title={title} className={cx('tag inline-flex h-5 items-center gap-1 border px-1.5 leading-none', className)}>
       {children}
     </span>
   )
@@ -72,9 +67,9 @@ export function Badge({ className, children, title }: { className?: string; chil
 
 export function RiskBadge({ risk }: { risk: Risk }) {
   return (
-    <Badge className={RISK_STYLES[risk]} title={`${RISK_LABELS[risk]} risk`}>
-      {RISK_LABELS[risk]}
-    </Badge>
+    <Tag className={RISK_STYLES[risk]} title={`${risk.toLowerCase()} risk`}>
+      {risk}
+    </Tag>
   )
 }
 
@@ -83,16 +78,14 @@ export function SourceBadges({ finding }: { finding: Finding }) {
   return (
     <span className="inline-flex gap-1">
       {kind !== 'gemini' && (
-        <Badge className="bg-surface-2 text-body ring-line" title="Found by the deterministic pattern scanner">
-          <ScanText className="size-3 text-muted" aria-hidden />
+        <Tag className="border-ink bg-surface text-ink" title="Found by the deterministic pattern scanner">
           Regex
-        </Badge>
+        </Tag>
       )}
       {kind !== 'regex' && (
-        <Badge className="bg-gemini-soft text-gemini-ink ring-gemini-line" title="Identified by Google Gemini">
-          <Sparkles className="size-3" aria-hidden />
+        <Tag className="border-gemini bg-gemini text-white" title="Identified by Google Gemini">
           Gemini
-        </Badge>
+        </Tag>
       )}
     </span>
   )
@@ -107,7 +100,7 @@ interface CheckboxProps {
   className?: string
 }
 
-/** Native checkbox (keyboard + screen reader support for free) with indeterminate state. */
+/** Native checkbox (keyboard + screen reader support for free), drawn square, with indeterminate state. */
 export function Checkbox({ checked, indeterminate = false, onChange, label, disabled, className }: CheckboxProps) {
   const ref = useRef<HTMLInputElement>(null)
   useEffect(() => {
@@ -121,18 +114,19 @@ export function Checkbox({ checked, indeterminate = false, onChange, label, disa
       checked={checked}
       disabled={disabled}
       onChange={(e) => onChange(e.target.checked)}
-      className={cx('size-4 shrink-0 cursor-pointer rounded accent-[var(--color-accent)] disabled:cursor-not-allowed', className)}
+      className={cx('check', className)}
     />
   )
 }
 
 export function PageNav({ page, count, onChange }: { page: number; count: number; onChange: (page: number) => void }) {
-  if (count <= 1) return <span className="text-xs text-muted">Page 1 of 1</span>
+  if (count <= 1) return <span className="tag text-muted">Page 1 / 1</span>
+  const square = 'flex size-8 items-center justify-center border-[1.5px] font-mono text-[13px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-30'
   return (
-    <div className="flex items-center gap-0.5" role="group" aria-label="Page navigation">
-      <Button variant="ghost" size="sm" className="px-2" disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label="Previous page">
+    <div className="flex items-center -space-x-[1.5px]" role="group" aria-label="Page navigation">
+      <button type="button" className={cx(square, 'border-ink bg-surface hover:bg-marker')} disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label="Previous page">
         <ChevronLeft className="size-4" aria-hidden />
-      </Button>
+      </button>
       {Array.from({ length: count }, (_, i) => i + 1).map((p) => (
         <button
           key={p}
@@ -140,42 +134,45 @@ export function PageNav({ page, count, onChange }: { page: number; count: number
           onClick={() => onChange(p)}
           aria-current={p === page ? 'page' : undefined}
           aria-label={`Page ${p}`}
-          className={cx(
-            'size-8 rounded-md text-[13px] font-medium tabular-nums transition-colors',
-            p === page ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-surface-3 hover:text-ink',
-          )}
+          className={cx(square, 'border-ink', p === page ? 'relative z-10 bg-ink text-paper' : 'bg-surface text-ink hover:bg-marker')}
         >
           {p}
         </button>
       ))}
-      <Button variant="ghost" size="sm" className="px-2" disabled={page >= count} onClick={() => onChange(page + 1)} aria-label="Next page">
+      <button type="button" className={cx(square, 'border-ink bg-surface hover:bg-marker')} disabled={page >= count} onClick={() => onChange(page + 1)} aria-label="Next page">
         <ChevronRight className="size-4" aria-hidden />
-      </Button>
+      </button>
     </div>
   )
 }
 
+/** Wordmark: an ink square carrying a highlighter "redaction bar". */
 export function Logo() {
   return (
-    <span className="flex items-center gap-2.5">
-      <svg viewBox="0 0 32 32" className="size-8" aria-hidden>
-        <rect width="32" height="32" rx="8" fill="var(--color-accent)" />
-        <path d="M16 6.5l8 3.1v6c0 4.9-3.3 8.7-8 10.3-4.7-1.6-8-5.4-8-10.3v-6l8-3.1z" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinejoin="round" />
-        <rect x="11.5" y="13.6" width="9" height="3.4" rx="1" fill="#fff" />
+    <span className="flex items-center gap-3">
+      <svg viewBox="0 0 28 28" className="size-7" aria-hidden>
+        <rect width="28" height="28" fill="var(--color-ink)" />
+        <rect x="5" y="8" width="18" height="4" fill="var(--color-paper)" />
+        <rect x="5" y="15" width="12" height="5" fill="var(--color-marker)" />
       </svg>
-      <span className="text-[16px] font-semibold tracking-tight whitespace-nowrap text-ink">
-        RedactProof <span className="font-medium text-muted">AI</span>
+      <span className="font-display text-[20px] leading-none font-bold tracking-[0.01em] whitespace-nowrap text-ink uppercase">
+        RedactProof<span className="ml-1.5 bg-ink px-1 text-marker">AI</span>
       </span>
     </span>
   )
 }
 
-/** A small colored dot used in legends and status pills. */
-export function Dot({ className }: { className: string }) {
-  return <span className={cx('inline-block size-2 shrink-0 rounded-full', className)} aria-hidden />
+/** Square legend swatch. */
+export function Swatch({ className }: { className: string }) {
+  return <span className={cx('inline-block size-3 shrink-0 border-[1.5px]', className)} aria-hidden />
 }
 
-/** Small square swatch for page-highlight legends. */
-export function Swatch({ className }: { className: string }) {
-  return <span className={cx('inline-block size-3 shrink-0 rounded-[3px] border-[1.5px]', className)} aria-hidden />
+/** Section heading with an optional index number, e.g. "02 Attacker view". */
+export function SectionTitle({ index, children, className }: { index?: string; children: ReactNode; className?: string }) {
+  return (
+    <h2 className={cx('flex items-baseline gap-3 font-display text-[28px] leading-none font-bold tracking-[-0.01em] text-ink uppercase', className)}>
+      {index && <span className="font-mono text-[13px] font-medium tracking-normal text-muted">{index}</span>}
+      {children}
+    </h2>
+  )
 }

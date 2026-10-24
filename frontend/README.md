@@ -1,6 +1,6 @@
 # RedactProof AI — Frontend
 
-React + TypeScript + Vite + Tailwind CSS v4 + Lucide icons. No other runtime dependencies.
+React + TypeScript + Vite + Tailwind CSS v4 + Lucide icons, with IBM Plex fonts bundled locally via `@fontsource` (no third-party font requests).
 
 ## Run locally
 
@@ -48,9 +48,17 @@ src/
 
 ## Theming
 
-All colors, fonts and shadows are design tokens in the `@theme` block of [src/index.css](src/index.css) (`canvas`, `surface`, `ink`, `accent`, `danger`, `warning`, `success`, `gemini`, `low`, …). Components only use those token names, so changing a value there re-themes the whole UI.
+All colors, fonts and shadows are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `marker`, `danger`, `warning`, `success`, `gemini`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square throughout by design.
 
-The earlier dark design is preserved at the git tag `design-dark-v1`. To view it: `git checkout design-dark-v1`. To bring it back on the branch: `git restore --source design-dark-v1 -- frontend/src frontend/index.html frontend/public` and commit.
+Earlier designs are saved as git tags:
+
+| Tag | Design |
+|---|---|
+| `design-dark-v1` | Dark dashboard |
+| `design-light-v1` | Light, rounded |
+| `design-bold-v1` | Current: bold, square, editorial |
+
+To view one: `git checkout <tag>`. To bring one back on the branch: `git restore --source <tag> -- frontend/src frontend/index.html frontend/public frontend/package.json frontend/package-lock.json`, run `npm install`, and commit.
 
 ## How it uses the API
 

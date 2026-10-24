@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type DragEvent } from 'react'
-import { AlertCircle, Loader2, Lock, UploadCloud, X } from 'lucide-react'
+import { ArrowDown, Loader2 } from 'lucide-react'
 import type { HealthState } from './AppShell'
 import { formatBytes } from '../utils/findings'
 import { Button, cx } from './ui'
@@ -24,8 +24,8 @@ function validate(file: File): string | null {
 }
 
 const STEPS = [
-  { title: 'Detect', body: 'A pattern scanner and Gemini each look for sensitive values, including ones that need context to spot.' },
-  { title: 'Remove', body: 'The values you select are deleted from the PDF itself — not painted over.' },
+  { title: 'Detect', body: 'A pattern scanner and Google Gemini each look for sensitive values — including ones that need context to spot.' },
+  { title: 'Remove', body: 'The values you pick are deleted from the PDF itself. Not painted over. Deleted.' },
   { title: 'Verify', body: 'The saved file is reopened and searched again for every value you removed.' },
 ]
 
@@ -52,90 +52,84 @@ export function UploadZone({ health, analyzing, error, onFile, onCancel }: Uploa
   }
 
   return (
-    <div className="mx-auto max-w-[720px] pt-6 sm:pt-14">
-      <div className="text-center">
-        <p className="mb-4 inline-flex items-center rounded-full border border-line bg-surface px-3 py-1 text-[13px] font-medium text-body shadow-xs">
-          PDF redaction you can verify
-        </p>
-        <h1 className="text-[34px] leading-[1.15] font-semibold tracking-[-0.02em] text-ink sm:text-[44px]">
-          Covering data isn't the same as removing it.
+    <div className="grid gap-12 pt-2 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16 lg:pt-8">
+      <div>
+        <p className="tag text-muted">PDF redaction you can verify</p>
+        <h1 className="mt-5 font-display text-[44px] leading-[1.02] font-bold tracking-[-0.015em] text-ink uppercase sm:text-[68px]">
+          <span className="inline-block bg-ink px-2 pt-[0.05em] leading-[0.9] text-paper">Covering</span> data isn't the same as removing it.
         </h1>
-        <p className="mx-auto mt-4 max-w-[560px] text-[16px] leading-relaxed text-muted">
-          A black box drawn over PDF text often leaves the text in the file. RedactProof finds sensitive values with
-          pattern scanning and Google Gemini, removes them for real, and checks the result.
+        <p className="mt-6 max-w-[540px] text-[17px] leading-relaxed text-body">
+          A black box drawn over PDF text usually leaves the text sitting in the file. Anyone can copy it out. RedactProof
+          finds the sensitive values, deletes them for real, and proves they're gone.
         </p>
+
+        <ol className="mt-10 border-t-[1.5px] border-ink">
+          {STEPS.map(({ title, body }, i) => (
+            <li key={title} className="grid grid-cols-[48px_120px_minmax(0,1fr)] items-baseline gap-2 border-b border-line py-4 max-sm:grid-cols-[40px_minmax(0,1fr)]">
+              <span className="font-mono text-[13px] text-muted">0{i + 1}</span>
+              <span className="font-display text-[18px] font-bold text-ink uppercase">{title}</span>
+              <span className="text-[14px] leading-relaxed text-body max-sm:col-start-2">{body}</span>
+            </li>
+          ))}
+        </ol>
       </div>
 
-      <div
-        onDragOver={(e) => {
-          e.preventDefault()
-          if (!analyzing) setDragging(true)
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={onDrop}
-        className={cx(
-          'mt-10 rounded-xl border-[1.5px] border-dashed bg-surface px-6 py-10 text-center shadow-xs transition-colors sm:px-10 sm:py-12',
-          dragging ? 'border-accent bg-accent-soft' : 'border-line-strong',
-        )}
-      >
-        {analyzing ? (
-          <AnalyzingState file={analyzing} gemini={geminiOn} onCancel={onCancel} />
-        ) : (
-          <>
-            <div className="mx-auto flex size-12 items-center justify-center rounded-full border-[6px] border-surface-2 bg-surface-3">
-              <UploadCloud className="size-5 text-body" aria-hidden />
-            </div>
-            <p className="mt-4 text-[16px] font-semibold text-ink">Drop a PDF here</p>
-            <p className="mt-1 text-sm text-muted">PDF only · up to 5 MB · up to 3 pages · text-based (no scans)</p>
-            <Button variant="primary" className="mt-6" onClick={() => inputRef.current?.click()}>
-              Browse files
-            </Button>
-            <input
-              ref={inputRef}
-              type="file"
-              accept="application/pdf,.pdf"
-              className="sr-only"
-              tabIndex={-1}
-              aria-label="Choose a PDF to analyze"
-              onChange={(e) => {
-                accept(e.target.files)
-                e.target.value = ''
-              }}
-            />
-          </>
-        )}
-      </div>
-
-      {shownError && !analyzing && (
-        <div role="alert" className="mt-4 flex items-start gap-3 rounded-lg border border-danger-line bg-danger-soft px-4 py-3 text-sm text-danger-ink">
-          <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
-          <span>{shownError}</span>
+      <div className="lg:pt-10">
+        <div
+          onDragOver={(e) => {
+            e.preventDefault()
+            if (!analyzing) setDragging(true)
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={onDrop}
+          className={cx(
+            'flex min-h-[340px] flex-col justify-center border-2 border-dashed border-ink px-8 py-10 shadow-hard transition-colors',
+            dragging ? 'bg-marker' : 'bg-surface',
+          )}
+        >
+          {analyzing ? (
+            <AnalyzingState file={analyzing} gemini={geminiOn} onCancel={onCancel} />
+          ) : (
+            <>
+              <ArrowDown className="size-8 text-ink" strokeWidth={2.25} aria-hidden />
+              <p className="mt-6 font-display text-[32px] leading-none font-bold text-ink uppercase">Drop a PDF here</p>
+              <p className="mt-3 font-mono text-[12px] text-muted">PDF only · up to 5 MB · up to 3 pages · text-based (no scans)</p>
+              <div className="mt-8">
+                <Button variant="primary" size="lg" onClick={() => inputRef.current?.click()}>
+                  Browse files
+                </Button>
+              </div>
+              <input
+                ref={inputRef}
+                type="file"
+                accept="application/pdf,.pdf"
+                className="sr-only"
+                tabIndex={-1}
+                aria-label="Choose a PDF to analyze"
+                onChange={(e) => {
+                  accept(e.target.files)
+                  e.target.value = ''
+                }}
+              />
+            </>
+          )}
         </div>
-      )}
 
-      <div className="mt-4 flex items-start gap-3 rounded-lg border border-line bg-surface-2 px-4 py-3 text-[13px] leading-relaxed text-muted">
-        <Lock className="mt-0.5 size-4 shrink-0 text-subtle" aria-hidden />
-        <p>
-          <span className="font-medium text-body">Privacy notice:</span>{' '}
+        {shownError && !analyzing && (
+          <div role="alert" className="mt-5 border-[1.5px] border-danger bg-danger px-4 py-3 text-[14px] font-medium text-white">
+            {shownError}
+          </div>
+        )}
+
+        <div className="mt-6 border-l-4 border-ink pl-4 text-[13px] leading-relaxed text-body">
+          <p className="tag mb-1 text-ink">Privacy notice</p>
           {geminiOn
             ? 'The PDF you upload is sent to the Google Gemini API for analysis (third-party processing). '
             : 'Gemini is not configured on this server, so your PDF is only scanned locally by the backend. '}
           Documents are kept in server memory for 30 minutes and never stored on disk.{' '}
-          <span className="font-medium text-body">Use synthetic demo documents only.</span>
-        </p>
+          <span className="font-semibold text-ink">Use synthetic demo documents only.</span>
+        </div>
       </div>
-
-      <ol className="mt-14 grid gap-8 border-t border-line pt-8 sm:grid-cols-3 sm:gap-6">
-        {STEPS.map(({ title, body }, i) => (
-          <li key={title}>
-            <span className="flex size-7 items-center justify-center rounded-full bg-accent-soft text-[13px] font-semibold text-accent">
-              {i + 1}
-            </span>
-            <p className="mt-3 text-[15px] font-semibold text-ink">{title}</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
-          </li>
-        ))}
-      </ol>
     </div>
   )
 }
@@ -150,19 +144,17 @@ function AnalyzingState({ file, gemini, onCancel }: { file: File; gemini: boolea
 
   return (
     <div role="status" aria-live="polite">
-      <div className="mx-auto flex size-12 items-center justify-center rounded-full border-[6px] border-accent-soft bg-accent-soft">
-        <Loader2 className="size-5 animate-spin text-accent" aria-hidden />
-      </div>
-      <p className="mt-4 text-[16px] font-semibold text-ink">Analyzing {file.name}</p>
-      <p className="mx-auto mt-1 max-w-md text-sm text-muted">
+      <Loader2 className="size-8 animate-spin text-ink" strokeWidth={2.25} aria-hidden />
+      <p className="mt-6 font-display text-[28px] leading-tight font-bold break-all text-ink uppercase">Analyzing {file.name}</p>
+      <p className="mt-3 max-w-md text-[14px] leading-relaxed text-body">
         {gemini
           ? 'Running the pattern scanner and asking Gemini for contextual identifiers. This can take up to a minute.'
           : 'Running the deterministic pattern scanner.'}
       </p>
-      <p className="mt-3 text-[13px] text-subtle tabular-nums">
+      <p className="mt-3 font-mono text-[12px] text-muted tabular-nums">
         {formatBytes(file.size)} · {seconds}s elapsed
       </p>
-      <Button variant="secondary" size="sm" className="mt-5" onClick={onCancel} icon={<X className="size-3.5" aria-hidden />}>
+      <Button variant="secondary" size="sm" className="mt-6" onClick={onCancel}>
         Cancel
       </Button>
     </div>

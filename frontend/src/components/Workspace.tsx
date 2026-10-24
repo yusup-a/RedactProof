@@ -1,5 +1,5 @@
 import { useRef, useState, type KeyboardEvent } from 'react'
-import { AlertTriangle, ArrowRight, FileText, RotateCcw, ScanEye } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import type { AnalysisResponse, RedactionResult } from '../api/types'
 import { api } from '../api/client'
 import { AttackerView } from './AttackerView'
@@ -59,34 +59,24 @@ export function Workspace(props: WorkspaceProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface shadow-xs">
-            <FileText className="size-5 text-muted" aria-hidden />
-          </div>
-          <div className="min-w-0">
-            <h1 className="truncate text-[18px] font-semibold tracking-tight text-ink">{analysis.filename}</h1>
-            <p className="text-[13px] text-muted tabular-nums">
-              {analysis.page_count} page{analysis.page_count === 1 ? '' : 's'} · {analysis.findings.length} finding
-              {analysis.findings.length === 1 ? '' : 's'}
-              {hiddenCount > 0 && <span className="font-medium text-danger-ink"> · {hiddenCount} hidden but extractable</span>}
-            </p>
-          </div>
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="min-w-0">
+          <p className="tag text-muted">Document</p>
+          <h1 className="mt-1 truncate font-display text-[30px] leading-none font-bold text-ink">{analysis.filename}</h1>
+          <p className="mt-2 font-mono text-[12px] text-body tabular-nums">
+            {analysis.page_count} page{analysis.page_count === 1 ? '' : 's'} / {analysis.findings.length} finding
+            {analysis.findings.length === 1 ? '' : 's'}
+            {hiddenCount > 0 && <span className="ml-2 bg-danger px-1.5 py-px font-semibold text-white">{hiddenCount} hidden but extractable</span>}
+          </p>
         </div>
-        <Button variant="secondary" size="sm" onClick={onStartOver} icon={<RotateCcw className="size-3.5" aria-hidden />}>
+        <Button variant="secondary" size="sm" onClick={onStartOver}>
           New PDF
         </Button>
       </div>
 
       {expired && (
-        <div
-          role="alert"
-          className="flex flex-col gap-3 rounded-lg border border-warning-line bg-warning-soft px-4 py-3 text-sm text-warning-ink sm:flex-row sm:items-center sm:justify-between"
-        >
-          <span className="flex items-start gap-2">
-            <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
-            This session has expired (documents are kept for 30 minutes). Upload the PDF again to continue.
-          </span>
+        <div role="alert" className="flex flex-col gap-3 border-[1.5px] border-ink bg-marker px-4 py-3 text-[14px] font-medium text-ink sm:flex-row sm:items-center sm:justify-between">
+          <span>This session has expired (documents are kept for 30 minutes). Upload the PDF again to continue.</span>
           <Button variant="primary" size="sm" onClick={onStartOver}>
             Upload again
           </Button>
@@ -97,18 +87,19 @@ export function Workspace(props: WorkspaceProps) {
 
       <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
         {tab === 'review' && (
-          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
-            <section aria-label="Document preview" className="card overflow-hidden">
-              <div className="flex min-h-14 flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-2">
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
-                  <span className="flex items-center gap-1.5"><Swatch className="border-danger bg-danger/12" /> High</span>
-                  <span className="flex items-center gap-1.5"><Swatch className="border-warning bg-warning/14" /> Medium</span>
-                  <span className="flex items-center gap-1.5"><Swatch className="border-low bg-low/10" /> Low</span>
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(380px,440px)]">
+            <section aria-label="Document preview" className="panel">
+              <div className="flex min-h-14 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b-[1.5px] border-ink px-4 py-2">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] text-body uppercase">
+                  <span className="flex items-center gap-1.5"><Swatch className="border-danger bg-danger/15" /> High</span>
+                  <span className="flex items-center gap-1.5"><Swatch className="border-warning bg-warning/20" /> Medium</span>
+                  <span className="flex items-center gap-1.5"><Swatch className="border-ink bg-ink/8" /> Low</span>
                   <span className="flex items-center gap-1.5"><Swatch className="border-dashed border-subtle" /> Not selected</span>
+                  <span className="flex items-center gap-1.5"><Swatch className="border-ink bg-marker/55" /> Active</span>
                 </div>
                 <PageNav page={current.page} count={analysis.pages.length} onChange={setPage} />
               </div>
-              <div className="bg-surface-2 p-5">
+              <div className="bg-surface-3 p-6">
                 <DocumentViewer
                   page={current}
                   imageUrl={api.url(current.preview_url)}
@@ -117,18 +108,17 @@ export function Workspace(props: WorkspaceProps) {
                   selectedIds={selectedIds}
                   activeId={activeId}
                   onFindingClick={(id) => activate(id, current.page)}
-                  reservedHeight={400}
+                  reservedHeight={470}
                 />
               </div>
               {hiddenCount > 0 && (
                 <button
                   type="button"
                   onClick={() => onTabChange('attacker')}
-                  className="group flex w-full items-center gap-2 border-t border-danger-line bg-danger-soft px-4 py-3 text-left text-[13px] font-medium text-danger-ink hover:bg-danger-line/40"
+                  className="group flex w-full items-center gap-3 border-t-[1.5px] border-ink bg-danger px-4 py-3 text-left text-[14px] font-semibold text-white hover:bg-danger-ink"
                 >
-                  <ScanEye className="size-4 shrink-0" aria-hidden />
                   <span className="flex-1">This PDF has text hidden under black boxes that is still extractable. Open the Attacker View</span>
-                  <ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden />
+                  <ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-1" strokeWidth={2.5} aria-hidden />
                 </button>
               )}
             </section>
@@ -185,8 +175,8 @@ function TabBar({ tabs, value, onChange }: { tabs: TabDef[]; value: Tab; onChang
   }
 
   return (
-    <div role="tablist" aria-label="Workspace" onKeyDown={onKeyDown} className="flex gap-6 overflow-x-auto border-b border-line">
-      {tabs.map(({ id, label, badge, alert, disabled }) => {
+    <div role="tablist" aria-label="Workspace" onKeyDown={onKeyDown} className="flex overflow-x-auto border-b-2 border-ink">
+      {tabs.map(({ id, label, badge, alert, disabled }, i) => {
         const selected = id === value
         return (
           <button
@@ -204,16 +194,18 @@ function TabBar({ tabs, value, onChange }: { tabs: TabDef[]; value: Tab; onChang
             title={disabled ? 'Redact findings to see the report' : undefined}
             onClick={() => onChange(id)}
             className={cx(
-              '-mb-px flex shrink-0 items-center gap-2 border-b-2 pt-1 pb-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40',
-              selected ? 'border-accent text-accent' : 'border-transparent text-muted hover:border-line-strong hover:text-ink',
+              'flex shrink-0 items-center gap-2.5 border-[1.5px] border-b-0 px-4 py-3 font-display text-[15px] font-semibold tracking-[0.02em] uppercase disabled:cursor-not-allowed disabled:opacity-35',
+              i > 0 && '-ml-[1.5px]',
+              selected ? 'border-ink bg-ink text-paper' : 'border-transparent text-ink hover:border-ink hover:bg-surface',
             )}
           >
+            <span className={cx('font-mono text-[11px] font-medium', selected ? 'text-marker' : 'text-muted')}>0{i + 1}</span>
             {label}
             {badge && (
               <span
                 className={cx(
-                  'rounded-full px-2 py-px text-xs font-medium ring-1 ring-inset tabular-nums',
-                  alert ? 'bg-danger-soft text-danger-ink ring-danger-line' : selected ? 'bg-accent-soft text-accent ring-accent-line' : 'bg-surface-3 text-body ring-line',
+                  'px-1.5 py-px font-mono text-[11px] font-semibold tracking-normal normal-case',
+                  alert ? 'bg-danger text-white' : selected ? 'bg-marker text-ink' : 'bg-surface-3 text-ink',
                 )}
               >
                 {badge}

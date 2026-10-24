@@ -17,16 +17,16 @@ export function BeforeAfterViewer({ analysis, result, page, onPageChange }: Befo
   const removed = analysis.findings.filter((f) => redacted.has(f.id))
 
   return (
-    <section aria-label="Before and after" className="card overflow-hidden">
-      <div className="flex h-14 items-center justify-between gap-2 border-b border-line px-5">
-        <h3 className="text-sm font-semibold text-ink">Before / after</h3>
+    <section aria-label="Before and after" className="panel">
+      <div className="flex h-14 items-center justify-between gap-2 border-b-[1.5px] border-ink px-5">
+        <h3 className="font-display text-[20px] font-bold text-ink uppercase">Before / after</h3>
         <PageNav page={page} count={Math.min(analysis.pages.length, result.pages.length)} onChange={onPageChange} />
       </div>
-      <div className="grid gap-6 bg-surface-2 p-6 md:grid-cols-2">
-        <figure>
-          <figcaption className="mb-3 flex items-center gap-3 text-[13px] text-muted">
-            <span className="font-semibold text-ink">Original</span>
-            <span className="inline-flex items-center gap-1.5">
+      <div className="grid bg-surface-3 md:grid-cols-2">
+        <figure className="p-6">
+          <figcaption className="mb-4 flex items-center gap-4">
+            <span className="tag text-ink">Original</span>
+            <span className="flex items-center gap-1.5 font-mono text-[11px] text-muted">
               <Swatch className="border-success bg-success/10" /> removed regions
             </span>
           </figcaption>
@@ -39,8 +39,8 @@ export function BeforeAfterViewer({ analysis, result, page, onPageChange }: Befo
             reservedHeight={320}
           />
         </figure>
-        <figure>
-          <figcaption className="mb-3 text-[13px] font-semibold text-ink">Redacted output</figcaption>
+        <figure className="border-ink p-6 max-md:border-t-[1.5px] md:border-l-[1.5px]">
+          <figcaption className="tag mb-4 text-ink">Redacted output</figcaption>
           <DocumentViewer page={after} imageUrl={api.url(after.preview_url)} alt={`Redacted page ${after.page}`} reservedHeight={320} />
         </figure>
       </div>

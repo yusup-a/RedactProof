@@ -1,98 +1,118 @@
 @import 'tailwindcss';
 
+/* Self-hosted type (no third-party font requests). */
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+@import '@fontsource/ibm-plex-sans-condensed/600.css';
+@import '@fontsource/ibm-plex-sans-condensed/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+
 /*
- * Design tokens. Components use these names only (bg-surface, text-danger-ink, border-gemini-line…),
- * so the whole UI can be re-themed from this block.
+ * Design tokens. Components use these names only (bg-paper, text-danger-ink, border-ink…),
+ * so the whole UI can be re-themed from this block. Corners are square by design.
  */
 @theme {
-  --font-sans: 'Inter', 'Inter var', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'IBM Plex Sans Condensed', 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* Neutrals */
-  --color-canvas: #f6f7f9;
+  /* Paper and ink */
+  --color-paper: #f1eee6;
   --color-surface: #ffffff;
-  --color-surface-2: #f9fafb;
-  --color-surface-3: #f2f4f7;
-  --color-line: #e4e7ec;
-  --color-line-strong: #d0d5dd;
-  --color-ink: #101828;
-  --color-body: #344054;
-  --color-muted: #667085;
-  --color-subtle: #98a2b3;
+  --color-surface-2: #f8f6f1;
+  --color-surface-3: #e9e5db;
+  --color-line: #d6d1c5;
+  --color-ink: #121212;
+  --color-body: #2a2926;
+  --color-muted: #66625a;
+  --color-subtle: #98938a;
 
-  /* Brand accent */
-  --color-accent: #2952cc;
-  --color-accent-hover: #2145b3;
-  --color-accent-soft: #eef2fd;
-  --color-accent-line: #c7d4f7;
+  /* Highlighter: active item, focus, revealed values */
+  --color-marker: #ffdd33;
 
-  /* Status: solid (marks, icons), ink (text), soft (fills), line (borders) */
-  --color-danger: #d92d20;
-  --color-danger-hover: #b42318;
-  --color-danger-ink: #b42318;
-  --color-danger-soft: #fef3f2;
-  --color-danger-line: #fecdca;
+  /* Status: solid (fills, marks), ink (text on light), soft (tints), line (borders) */
+  --color-danger: #d42a1f;
+  --color-danger-ink: #a81d14;
+  --color-danger-soft: #fbe4e1;
+  --color-danger-line: #eeb1ab;
 
-  --color-warning: #f79009;
-  --color-warning-ink: #b54708;
-  --color-warning-soft: #fffaeb;
-  --color-warning-line: #fedf89;
+  --color-warning: #eb9a00;
+  --color-warning-ink: #7d5200;
+  --color-warning-soft: #fdf0cf;
+  --color-warning-line: #ecc871;
 
-  --color-success: #17b26a;
-  --color-success-ink: #067647;
-  --color-success-soft: #ecfdf3;
-  --color-success-line: #abefc6;
+  --color-success: #0d7a3f;
+  --color-success-ink: #0a6634;
+  --color-success-soft: #dff0e5;
+  --color-success-line: #9fd1b2;
 
-  --color-gemini: #7a5af8;
-  --color-gemini-ink: #5925dc;
-  --color-gemini-soft: #f4f3ff;
-  --color-gemini-line: #d9d6fe;
+  --color-gemini: #2b3bff;
+  --color-gemini-ink: #1f2bd1;
+  --color-gemini-soft: #e7e9ff;
+  --color-gemini-line: #b3b9ff;
 
-  --color-low: #4e5ba6;
-  --color-low-ink: #363f72;
-  --color-low-soft: #f8f9fc;
-  --color-low-line: #d5d9eb;
-
-  --shadow-xs: 0 1px 2px 0 rgb(16 24 40 / 0.05);
-  --shadow-page: 0 1px 3px 0 rgb(16 24 40 / 0.1), 0 1px 2px -1px rgb(16 24 40 / 0.06);
+  --shadow-hard: 4px 4px 0 0 var(--color-ink);
+  --shadow-hard-sm: 2px 2px 0 0 var(--color-ink);
 }
 
 @layer base {
   html {
-    background: var(--color-canvas);
+    background: var(--color-paper);
     color: var(--color-body);
     -webkit-font-smoothing: antialiased;
-    font-feature-settings: 'cv11', 'ss01';
   }
   body {
     min-height: 100vh;
-    background: var(--color-canvas);
+    background: var(--color-paper);
   }
   ::selection {
-    background: var(--color-accent-line);
+    background: var(--color-marker);
+    color: var(--color-ink);
   }
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-ink);
     outline-offset: 2px;
+    box-shadow: 0 0 0 5px var(--color-marker);
   }
 }
 
 @layer components {
-  .card {
-    @apply rounded-xl border border-line bg-surface shadow-xs;
+  /* A ruled panel: hard ink border, square corners. */
+  .panel {
+    @apply border-[1.5px] border-ink bg-surface;
   }
-  .label {
-    @apply text-xs font-medium text-muted;
+  /* Small mono caps used for section labels and metadata. */
+  .tag {
+    @apply font-mono text-[11px] font-medium tracking-[0.08em] uppercase;
+  }
+
+  /* Square custom checkbox; keeps the native input for keyboard and screen readers. */
+  .check {
+    @apply size-[18px] shrink-0 cursor-pointer appearance-none border-[1.5px] border-ink bg-surface transition-colors disabled:cursor-not-allowed disabled:opacity-40;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .check:checked {
+    background-color: var(--color-ink);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23ffdd33' stroke-width='2.2' stroke-linecap='square'/%3E%3C/svg%3E");
+  }
+  .check:indeterminate {
+    background-color: var(--color-ink);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8h8' stroke='%23ffdd33' stroke-width='2.2'/%3E%3C/svg%3E");
   }
 }
 
 @keyframes highlight-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgb(41 82 204 / 0.45);
+    box-shadow: 0 0 0 0 rgb(255 221 51 / 0.9);
   }
   50% {
-    box-shadow: 0 0 0 6px rgb(41 82 204 / 0);
+    box-shadow: 0 0 0 6px rgb(255 221 51 / 0);
   }
 }
 

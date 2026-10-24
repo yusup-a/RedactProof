@@ -1,4 +1,3 @@
-import { AlertCircle, ShieldCheck } from 'lucide-react'
 import type { Finding } from '../api/types'
 import { Button } from './ui'
 
@@ -17,20 +16,19 @@ export function RedactionControls({ findings, selectedIds, redacting, disabled, 
   const locations = selected.reduce((n, f) => n + f.locations.length, 0)
 
   return (
-    <div className="border-t border-line bg-surface p-4">
+    <div className="border-t-[1.5px] border-ink bg-surface-2 p-4">
       {error && (
-        <div role="alert" className="mb-3 flex items-start gap-2 rounded-lg border border-danger-line bg-danger-soft px-3 py-2 text-[13px] text-danger-ink">
-          <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
+        <div role="alert" className="mb-3 border-[1.5px] border-danger bg-danger px-3 py-2 text-[13px] font-medium text-white">
           {error}
         </div>
       )}
-      <div className="mb-3 flex items-center justify-between text-[13px]">
-        <span className="text-muted tabular-nums" aria-live="polite">
+      <div className="mb-3 flex items-center justify-between font-mono text-[12px]">
+        <span className="text-body tabular-nums" aria-live="polite">
           {selected.length === 0 ? (
             'Select findings to remove'
           ) : (
             <>
-              <span className="font-semibold text-ink">{selected.length}</span> value{selected.length === 1 ? '' : 's'} ·{' '}
+              <span className="font-semibold text-ink">{selected.length}</span> value{selected.length === 1 ? '' : 's'} /{' '}
               {locations} location{locations === 1 ? '' : 's'} will be removed
             </>
           )}
@@ -40,21 +38,13 @@ export function RedactionControls({ findings, selectedIds, redacting, disabled, 
             type="button"
             onClick={onClear}
             disabled={redacting || disabled}
-            className="text-[13px] font-medium text-muted hover:text-ink disabled:opacity-50"
+            className="text-ink underline decoration-1 underline-offset-4 hover:bg-marker disabled:opacity-40"
           >
             Clear
           </button>
         )}
       </div>
-      <Button
-        variant="primary"
-        size="lg"
-        className="w-full"
-        disabled={disabled || selected.length === 0}
-        loading={redacting}
-        onClick={onRedact}
-        icon={<ShieldCheck className="size-4" aria-hidden />}
-      >
+      <Button variant="primary" size="lg" className="w-full" disabled={disabled || selected.length === 0} loading={redacting} onClick={onRedact}>
         {redacting ? 'Redacting and verifying…' : 'Securely Redact Selected'}
       </Button>
     </div>
