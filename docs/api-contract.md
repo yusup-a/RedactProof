@@ -45,6 +45,7 @@ Limits: max **5 MB**, max **3 pages**, must be a real, unencrypted PDF.
   "gemini_status": "ok",
   "gemini_message": null,
   "gemini_model": "gemini-flash-latest",
+  "gemini_stats": { "suggested": 6, "accepted": 5, "rejected": 1 },
   "pages": [
     {
       "page": 1,
@@ -99,6 +100,7 @@ Values above are illustrative only.
 |---|---|---|
 | `gemini_status` | `"ok" \| "unavailable" \| "error"` | `ok`: Gemini ran and its results are included. `unavailable`: no API key configured. `error`: Gemini failed (timeout, quota, invalid output); results are regex-only. |
 | `gemini_message` | `string \| null` | Human-readable reason when status is not `ok`. Safe to display. |
+| `gemini_stats` | `object \| null` | Only when `gemini_status` is `ok`. `suggested`: values Gemini returned. `accepted`: values verified to exist in the PDF and located. `rejected`: values thrown out (not in the document, malformed, or too short). Good for the Gemini insights panel. |
 | `pages[].extracted_text` | `string` | All text a machine can extract from the page, **including text hidden under black boxes**. Use it for the Attacker View. Contains sensitive demo data — never log it. |
 | `findings[].id` | `string` | Server-generated. The only thing sent back to `/api/redact`. |
 | `findings[].type` | enum | `EMAIL`, `PHONE`, `ACCOUNT_NUMBER`, `ROUTING_NUMBER`, `CARD_NUMBER`, `SSN`, `EMPLOYEE_ID`, `CUSTOMER_ID`, `PERSON_NAME`, `ADDRESS`, `DATE_OF_BIRTH`, `OTHER` |
