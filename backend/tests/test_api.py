@@ -45,6 +45,14 @@ def test_full_flow(client):
         assert s.ACCOUNT_NUMBER not in doc[0].get_text()
 
 
+def test_download_keeps_unicode_filename(client):
+    analysis = upload(client, s.build_insecure_statement(), "résumé – Ana.pdf").json()
+    result = client.post("/api/redact", json={"document_id": analysis["document_id"], "finding_ids": ["finding-1"]}).json()
+    disposition = client.get(result["download_url"]).headers["content-disposition"]
+    assert 'filename="r_sum_Ana-redacted.pdf"' in disposition
+    assert "filename*=UTF-8''r%C3%A9sum%C3%A9%20%E2%80%93%20Ana-redacted.pdf" in disposition
+
+
 def test_rejects_non_pdf(client):
     r = upload(client, b"just some text pretending to be a pdf")
     assert r.status_code == 400

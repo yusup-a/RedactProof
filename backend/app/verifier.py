@@ -3,7 +3,7 @@
 import pymupdf
 
 from .models import Finding, RemainingValue, VerificationReport
-from .pdf_scanner import value_in_text
+from .pdf_scanner import find_rects, value_in_text
 
 METHOD = "Reopened the saved output PDF and searched all extracted page text for each selected literal value."
 LIMITATIONS = [
@@ -20,7 +20,7 @@ def verify(output_bytes: bytes, findings: list[Finding], locations_redacted: int
         for f in findings:
             pages = [
                 i for i, page in enumerate(doc, start=1)
-                if value_in_text(f.text, [page_texts[i - 1]]) or page.search_for(f.text)
+                if value_in_text(f.text, [page_texts[i - 1]]) or find_rects(page, f.text)
             ]
             if pages:
                 remaining.append(RemainingValue(finding_id=f.id, pages=pages))

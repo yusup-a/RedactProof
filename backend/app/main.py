@@ -1,6 +1,7 @@
 import logging
 import re
 import uuid
+from urllib.parse import quote
 
 from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
@@ -210,12 +211,11 @@ def download(result_id: str):
     session = store.get(result_id, ResultSession)
     if not session:
         raise _expired()
-    stem = re.sub(r"[^A-Za-z0-9._-]+", "_", session.filename.rsplit(".", 1)[0])[:80] or "document"
-    return Response(
-        session.pdf_bytes,
-        media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="{stem}-redacted.pdf"'},
-    )
+    original = session.filename.rsplit(".", 1)[0][:80] or "document"
+    ascii_stem = re.sub(r"[^A-Za-z0-9._-]+", "_", original).strip("_") or "document"
+    # ASCII fallback for old clients, RFC 5987 UTF-8 name for browsers.
+    disposition = f"attachment; filename=\"{ascii_stem}-redacted.pdf\"; filename*=UTF-8''{quote(original)}-redacted.pdf"
+    return Response(session.pdf_bytes, media_type="application/pdf", headers={"Content-Disposition": disposition})
 
 
 @app.get("/api/results/{result_id}/pages/{page}/preview")
