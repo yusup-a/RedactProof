@@ -28,7 +28,7 @@ export function Button({ variant = 'secondary', size = 'md', loading, icon, clas
     <button
       type="button"
       className={cx(
-        'inline-flex shrink-0 items-center justify-center border-[1.5px] font-display font-semibold tracking-[0.03em] uppercase transition-colors duration-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:translate-y-0',
+        'inline-flex shrink-0 items-center justify-center border-[1.5px] font-display font-semibold transition-colors duration-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:translate-y-0',
         sizes[size],
         BUTTON_VARIANTS[variant],
         className,

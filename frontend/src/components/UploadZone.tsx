@@ -62,7 +62,7 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           ) : (
             <>
               <ArrowDown className="size-8 text-ink" strokeWidth={2.25} aria-hidden />
-              <h1 className="mt-6 font-display text-[32px] leading-tight font-bold text-ink uppercase">Upload a PDF to redact</h1>
+              <h1 className="mt-6 font-display text-[32px] leading-tight font-bold text-ink">Upload a PDF to redact</h1>
               <div className="mt-8">
                 <Button variant="primary" size="lg" onClick={() => inputRef.current?.click()}>
                   Browse files
@@ -106,7 +106,7 @@ function AnalyzingState({ file, onCancel }: { file: File; onCancel: () => void }
   return (
     <div role="status" aria-live="polite">
       <Loader2 className="mx-auto size-8 animate-spin text-ink" strokeWidth={2.25} aria-hidden />
-      <p className="mt-6 font-display text-[28px] leading-tight font-bold break-all text-ink uppercase">Analyzing {file.name}</p>
+      <p className="mt-6 font-display text-[28px] leading-tight font-bold break-all text-ink">Analyzing {file.name}</p>
       <p className="mx-auto mt-3 max-w-md text-[14px] leading-relaxed text-body">
         Scanning the document for sensitive values. This can take up to a minute.
       </p>

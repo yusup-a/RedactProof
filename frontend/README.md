@@ -55,7 +55,8 @@ Earlier designs are saved as git tags:
 |---|---|
 | `design-dark-v1` | Dark dashboard |
 | `design-light-v1` | Light, rounded |
-| `design-bold-v1` | Current: bold, square, editorial |
+| `design-bold-v1` | Bold, square, editorial (first version) |
+| `design-caps-v1` | Simplified white UI with PDF readers, all-caps titles and buttons |
 
 To view one: `git checkout <tag>`. To bring one back on the branch: `git restore --source <tag> -- frontend/src frontend/index.html frontend/public frontend/package.json frontend/package-lock.json`, run `npm install`, and commit.
 

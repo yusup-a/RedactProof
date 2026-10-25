@@ -37,7 +37,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
     <section aria-label="Findings" className="panel flex max-h-[calc(100vh-19.5rem)] min-h-[460px] flex-col lg:sticky lg:top-24">
       <div className="border-b-[1.5px] border-ink p-4">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-display text-[24px] leading-none font-bold text-ink uppercase">
+          <h2 className="font-display text-[24px] leading-none font-bold text-ink">
             Findings
           </h2>
           {findings.length > 0 && (
@@ -73,7 +73,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
       <div className="flex-1 overflow-y-auto">
         {findings.length === 0 ? (
           <div className="p-6">
-            <p className="font-display text-[20px] font-bold text-ink uppercase">No sensitive values detected</p>
+            <p className="font-display text-[20px] font-bold text-ink">No sensitive values detected</p>
             <p className="mt-2 text-[14px] leading-relaxed text-body">
               Nothing in this PDF's text was flagged. That isn't proof the document is clean — review it before you share
               it.
@@ -83,7 +83,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
           groups.map((group) => (
             <div key={group.type}>
               <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-line bg-surface px-4 py-2">
-                <h3 className="tag flex-1 text-ink">{group.label}</h3>
+                <h3 className="flex-1 text-[13px] font-semibold text-ink">{group.label}</h3>
               </div>
               <ul>
                 {group.findings.map((f) => (

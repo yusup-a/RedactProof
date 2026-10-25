@@ -172,7 +172,7 @@ function TabBar({ tabs, value, onChange }: { tabs: TabDef[]; value: Tab; onChang
             title={disabled ? 'Redact findings to see the report' : undefined}
             onClick={() => onChange(id)}
             className={cx(
-              'flex shrink-0 items-center gap-2.5 border-[1.5px] border-b-0 px-4 py-3 font-display text-[15px] font-semibold tracking-[0.02em] uppercase disabled:cursor-not-allowed disabled:opacity-35',
+              'flex shrink-0 items-center gap-2.5 border-[1.5px] border-b-0 px-4 py-3 font-display text-[15px] font-semibold disabled:cursor-not-allowed disabled:opacity-35',
               i > 0 && '-ml-[1.5px]',
               selected ? 'border-ink bg-ink text-paper' : 'border-transparent text-ink hover:opacity-65',
             )}

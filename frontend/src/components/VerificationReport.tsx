@@ -30,7 +30,7 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
         <div className={cx('flex flex-col gap-6 px-6 py-6 md:flex-row md:items-center md:justify-between', passed ? 'bg-success text-white' : 'bg-danger text-white')}>
           <div role={passed ? 'status' : 'alert'}>
             <p className="tag text-white/75">02 / Verification</p>
-            <h2 className="mt-2 font-display text-[34px] leading-none font-bold uppercase sm:text-[44px]">
+            <h2 className="mt-2 font-display text-[34px] leading-none font-bold sm:text-[44px]">
               {passed ? 'Redaction complete' : 'Verification failed'}
             </h2>
             {!passed && (
@@ -49,12 +49,12 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
                 href={api.url(result.download_url)}
                 download
                 className={cx(
-                  'inline-flex h-12 items-center justify-center gap-2.5 border-[1.5px] px-6 font-display text-[16px] font-semibold tracking-[0.03em] uppercase transition-colors',
+                  'inline-flex h-12 items-center justify-center gap-2.5 border-[1.5px] px-6 font-display text-[16px] font-semibold transition-colors',
                   passed ? 'border-ink bg-paper text-ink hover:bg-ink hover:text-paper' : 'border-white bg-transparent text-white hover:bg-white/15',
                 )}
               >
                 <Download className="size-4" strokeWidth={2.25} aria-hidden />
-                {passed ? 'Download Redacted PDF' : 'Download anyway (unverified)'}
+                {passed ? 'Download redacted PDF' : 'Download anyway (unverified)'}
               </a>
             ) : (
               <Button size="lg" disabled icon={<Download className="size-4" aria-hidden />}>
@@ -91,7 +91,7 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
 
       <div className="panel">
         <section aria-label="Removed values" className="p-6">
-          <h3 className="font-display text-[20px] font-bold text-ink uppercase">Removed values</h3>
+          <h3 className="font-display text-[20px] font-bold text-ink">Removed values</h3>
           <ul className="mt-4 grid border-t-[1.5px] border-ink md:grid-cols-2 md:gap-x-10">
             {redacted.map((f) => (
               <li key={f.id} className="flex items-center justify-between gap-2 border-b border-line py-2 text-[14px]">
