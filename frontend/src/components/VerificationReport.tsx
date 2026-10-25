@@ -31,7 +31,7 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
           <div role={passed ? 'status' : 'alert'}>
             <p className="tag text-white/75">02 / Verification</p>
             <h2 className="mt-2 font-display text-[34px] leading-none font-bold sm:text-[44px]">
-              {passed ? 'Redaction complete' : 'Verification failed'}
+              {passed ? 'Redaction Complete' : 'Verification Failed'}
             </h2>
             {!passed && (
               <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/90">
@@ -54,11 +54,11 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
                 )}
               >
                 <Download className="size-4" strokeWidth={2.25} aria-hidden />
-                {passed ? 'Download redacted PDF' : 'Download anyway (unverified)'}
+                {passed ? 'Download Redacted PDF' : 'Download Anyway (Unverified)'}
               </a>
             ) : (
               <Button size="lg" disabled icon={<Download className="size-4" aria-hidden />}>
-                Download unavailable in mock mode
+                Download Unavailable In Mock Mode
               </Button>
             )}
           </div>
@@ -91,7 +91,7 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
 
       <div className="panel">
         <section aria-label="Removed values" className="p-6">
-          <h3 className="font-display text-[20px] font-bold text-ink">Removed values</h3>
+          <h3 className="font-display text-[20px] font-bold text-ink">Removed Values</h3>
           <ul className="mt-4 grid border-t-[1.5px] border-ink md:grid-cols-2 md:gap-x-10">
             {redacted.map((f) => (
               <li key={f.id} className="flex items-center justify-between gap-2 border-b border-line py-2 text-[14px]">
@@ -109,7 +109,7 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
 
       <div>
         <Button variant="ghost" onClick={onBack} icon={<ArrowLeft className="size-4" aria-hidden />}>
-          Back to findings
+          Back To Findings
         </Button>
       </div>
     </div>

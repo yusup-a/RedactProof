@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import type { Finding } from '../api/types'
-import { groupFindings } from '../utils/findings'
+import { groupFindings, titleCase } from '../utils/findings'
 import { FindingCard } from './FindingCard'
 import { Button, Checkbox } from './ui'
 
@@ -48,7 +48,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
               icon={allRevealed ? <EyeOff className="size-3.5" aria-hidden /> : <Eye className="size-3.5" aria-hidden />}
               aria-pressed={allRevealed}
             >
-              {allRevealed ? 'Mask values' : 'Reveal values'}
+              {allRevealed ? 'Mask Values' : 'Reveal Values'}
             </Button>
           )}
         </div>
@@ -73,7 +73,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
       <div className="flex-1 overflow-y-auto">
         {findings.length === 0 ? (
           <div className="p-6">
-            <p className="font-display text-[20px] font-bold text-ink">No sensitive values detected</p>
+            <p className="font-display text-[20px] font-bold text-ink">No Sensitive Values Detected</p>
             <p className="mt-2 text-[14px] leading-relaxed text-body">
               Nothing in this PDF's text was flagged. That isn't proof the document is clean — review it before you share
               it.
@@ -83,7 +83,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
           groups.map((group) => (
             <div key={group.type}>
               <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-line bg-surface px-4 py-2">
-                <h3 className="flex-1 text-[13px] font-semibold text-ink">{group.label}</h3>
+                <h3 className="flex-1 text-[13px] font-semibold text-ink">{titleCase(group.label)}</h3>
               </div>
               <ul>
                 {group.findings.map((f) => (

@@ -17,7 +17,7 @@ export function BeforeAfterViewer({ analysis, result }: BeforeAfterViewerProps) 
   return (
     <section aria-label="Unredacted and redacted" className="panel">
       <div className="flex h-14 items-center border-b-[1.5px] border-ink px-5">
-        <h3 className="font-display text-[20px] font-bold text-ink">Unredacted / redacted</h3>
+        <h3 className="font-display text-[20px] font-bold text-ink">Unredacted / Redacted</h3>
       </div>
       <div className="grid md:grid-cols-2">
         <figure className="min-w-0">

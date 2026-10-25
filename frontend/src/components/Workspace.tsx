@@ -42,8 +42,8 @@ export function Workspace(props: WorkspaceProps) {
   }
 
   const tabs: TabDef[] = [
-    { id: 'review', label: 'Review findings' },
-    { id: 'report', label: 'Verification report', disabled: !result },
+    { id: 'review', label: 'Review Findings' },
+    { id: 'report', label: 'Verification Report', disabled: !result },
   ]
 
   return (
@@ -67,7 +67,7 @@ export function Workspace(props: WorkspaceProps) {
         <div role="alert" className="flex flex-col gap-3 border-[1.5px] border-ink bg-surface px-4 py-3 text-[14px] font-medium text-ink sm:flex-row sm:items-center sm:justify-between">
           <span>This session has expired (documents are kept for 30 minutes). Upload the PDF again to continue.</span>
           <Button variant="primary" size="sm" onClick={onStartOver}>
-            Upload again
+            Upload Again
           </Button>
         </div>
       )}

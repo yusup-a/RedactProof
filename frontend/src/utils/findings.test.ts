@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Finding } from '../api/types'
-import { bboxToPercent, groupFindings, sourceKind } from './findings'
+import { bboxToPercent, groupFindings, sourceKind, titleCase } from './findings'
 
 function finding(overrides: Partial<Finding>): Finding {
   return {
@@ -55,5 +55,12 @@ describe('sourceKind', () => {
     expect(sourceKind(finding({ source: ['regex', 'gemini'] }))).toBe('both')
     expect(sourceKind(finding({ source: ['gemini'] }))).toBe('gemini')
     expect(sourceKind(finding({ source: ['regex'] }))).toBe('regex')
+  })
+})
+
+describe('titleCase', () => {
+  it('capitalizes every word and keeps existing capitals', () => {
+    expect(titleCase('Employee / staff ID')).toBe('Employee / Staff ID')
+    expect(titleCase('date of birth')).toBe('Date Of Birth')
   })
 })

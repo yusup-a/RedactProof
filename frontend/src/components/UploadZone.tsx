@@ -62,10 +62,10 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           ) : (
             <>
               <ArrowDown className="size-8 text-ink" strokeWidth={2.25} aria-hidden />
-              <h1 className="mt-6 font-display text-[32px] leading-tight font-bold text-ink">Upload a PDF to redact</h1>
+              <h1 className="mt-6 font-display text-[32px] leading-tight font-bold text-ink">Upload A PDF To Redact</h1>
               <div className="mt-8">
                 <Button variant="primary" size="lg" onClick={() => inputRef.current?.click()}>
-                  Browse files
+                  Browse Files
                 </Button>
               </div>
               <input

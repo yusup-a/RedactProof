@@ -62,6 +62,11 @@ export function bboxToPercent(bbox: BBox, pageWidth: number, pageHeight: number,
   }
 }
 
+/** Capitalizes the first letter of every word, leaving the rest as is ("Employee / staff ID" → "Employee / Staff ID"). */
+export function titleCase(text: string) {
+  return text.replace(/(^|\s)(\S)/g, (_, space: string, letter: string) => space + letter.toUpperCase())
+}
+
 export function formatBytes(bytes: number) {
   return bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`
 }
