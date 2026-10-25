@@ -64,7 +64,7 @@ To view one: `git checkout <tag>`. To bring one back on the branch: `git restore
 - **Highlights** come only from backend `locations[].bbox` (PDF points, top-left origin). Each box is placed as a percentage of `page.width`/`page.height` over an image sized with the page's aspect ratio — equivalent to `scale = displayWidth / page.width` and accurate at any size. A finding is one value; all of its locations are drawn, and the `p.N` chips jump to each page.
 - **Masking**: the UI shows `display` by default; `text` appears only after the user reveals it.
 - **Hidden text**: there is no Attacker View tab (product decision), so `pages[].extracted_text` isn't displayed. Findings the backend reports as `visually_hidden: true` are labeled “hidden · extractable”, and the document header counts them.
-- **Verification**: success is shown only when `verification.status === "passed"`, worded as "Targeted text verification passed". Failure lists `remaining`, and the download is labeled unverified.
+- **Verification**: "Redaction complete" is shown only when `verification.status === "passed"`. Otherwise the report says "Verification failed", lists `remaining`, and labels the download unverified.
 - **Gemini is not named anywhere in the UI**, and there is no privacy notice, model badge or list of PDF limits (product decision). The only Gemini field read is `gemini_status`: when it isn't `ok`, the findings panel shows a neutral “contextual analysis was unavailable” notice so users know results are pattern-only. Limits are still enforced, and the error messages explain them when a file is rejected.
 - **Errors** show the backend's `message`. `SESSION_EXPIRED_OR_NOT_FOUND` locks the workspace and offers "Upload again"; a failed preview image shows a placeholder.
 

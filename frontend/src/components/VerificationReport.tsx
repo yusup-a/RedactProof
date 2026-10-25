@@ -33,13 +33,14 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
           <div role={passed ? 'status' : 'alert'}>
             <p className="tag text-white/75">02 / Verification</p>
             <h2 className="mt-2 font-display text-[34px] leading-none font-bold uppercase sm:text-[44px]">
-              {passed ? 'Targeted text verification passed' : 'Verification failed'}
+              {passed ? 'Redaction complete' : 'Verification failed'}
             </h2>
-            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/90">
-              {passed
-                ? `The redacted PDF was reopened and searched for all ${v.values_tested} selected value${v.values_tested === 1 ? '' : 's'}. None of them can be extracted anymore.`
-                : `${v.values_still_detected} of the ${v.values_tested} selected values can still be extracted from the output. Do not share this file.`}
-            </p>
+            {!passed && (
+              <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/90">
+                {v.values_still_detected} of the {v.values_tested} selected values can still be extracted from the output. Do not
+                share this file.
+              </p>
+            )}
             {USE_MOCK && (
               <p className="mt-2 inline-block bg-paper px-1.5 font-mono text-[12px] font-semibold text-ink">Mock mode — no real redaction or verification happened.</p>
             )}

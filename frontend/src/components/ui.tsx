@@ -11,7 +11,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary: 'border-ink bg-ink text-paper hover:bg-body active:translate-y-px',
   secondary: 'border-ink bg-surface text-ink hover:bg-ink hover:text-paper active:translate-y-px',
-  ghost: 'border-transparent text-ink hover:border-ink hover:bg-surface',
+  ghost: 'border-transparent text-ink hover:opacity-65',
   danger: 'border-danger bg-danger text-white hover:bg-danger-ink hover:border-danger-ink active:translate-y-px',
 }
 

@@ -54,7 +54,7 @@ export function FindingHighlight({ finding, location, pageWidth, pageHeight, sel
     'absolute border-2',
     toneClass,
     active && 'z-10',
-    onClick && 'cursor-pointer hover:border-[3px]',
+    onClick && 'cursor-pointer',
   )
 
   if (!onClick) return <span className={className} style={style} title={label} aria-hidden />
