@@ -20,7 +20,7 @@ The backend's CORS default allows `http://localhost:5173`, so keep that port.
 | `VITE_API_BASE_URL` | `http://localhost:8000` | Backend base URL. All `preview_url` / `download_url` values from the API are prefixed with it. |
 | `VITE_USE_MOCK` | `false` | `true` runs on built-in sample data with no backend. For UI work only — a banner and labels mark everything as mock. Never use it for the demo. |
 
-Other scripts: `npm run build`, `npm run typecheck`, `npm test` (unit tests for bbox scaling, text segmentation, grouping).
+Other scripts: `npm run build`, `npm run typecheck`, `npm test` (unit tests for bbox scaling, grouping, source classification).
 
 ## Structure
 
@@ -31,7 +31,7 @@ src/
     client.ts      the single API client (fetch); `api` switches to mock when VITE_USE_MOCK=true
     errors.ts      ApiError — { error: { code, message } } plus NETWORK_ERROR
     mock.ts        labeled mock service (SVG page, no Gemini)
-  utils/findings.ts  labels, grouping, bbox → % positioning, extracted-text segmentation
+  utils/findings.ts  labels, grouping, bbox → % positioning
   components/
     AppShell             header, backend-offline badge, mock banner
     UploadZone           Screen A: drag-and-drop, client-side checks, analyzing state
@@ -40,7 +40,6 @@ src/
     FindingsSidebar      grouped findings, select all / per group, mask + reveal
     FindingCard          one finding: masked value, risk, sources, locations
     RedactionControls    Screen D: "Securely Redact Selected"
-    AttackerView         Screen C: visual vs extracted text, before and after
     VerificationReport   Screen E: status, counts, limitations, download
     BeforeAfterViewer    original vs redacted previews
 ```
@@ -63,7 +62,7 @@ To view one: `git checkout <tag>`. To bring one back on the branch: `git restore
 
 - **Highlights** come only from backend `locations[].bbox` (PDF points, top-left origin). Each box is placed as a percentage of `page.width`/`page.height` over an image sized with the page's aspect ratio — equivalent to `scale = displayWidth / page.width` and accurate at any size. A finding is one value; all of its locations are drawn, and the `p.N` chips jump to each page.
 - **Masking**: the UI shows `display` by default; `text` appears only after the user reveals it.
-- **Attacker View** renders `pages[].extracted_text` from `/api/analyze` (before) and from `/api/redact` (after). The black-box warning only appears when the backend reports `visually_hidden: true`.
+- **Hidden text**: there is no Attacker View tab (product decision), so `pages[].extracted_text` isn't displayed. Findings the backend reports as `visually_hidden: true` are labeled “hidden · extractable”, and the document header counts them.
 - **Verification**: success is shown only when `verification.status === "passed"`, worded as "Targeted text verification passed". Failure lists `remaining`, and the download is labeled unverified.
 - **Gemini is not named anywhere in the UI**, and there is no privacy notice, model badge or list of PDF limits (product decision). The only Gemini field read is `gemini_status`: when it isn't `ok`, the findings panel shows a neutral “contextual analysis was unavailable” notice so users know results are pattern-only. Limits are still enforced, and the error messages explain them when a file is rejected.
 - **Errors** show the backend's `message`. `SESSION_EXPIRED_OR_NOT_FOUND` locks the workspace and offers "Upload again"; a failed preview image shows a placeholder.

@@ -34,7 +34,7 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
       <section aria-label="Verification status" className="border-[1.5px] border-ink bg-surface shadow-hard">
         <div className={cx('flex flex-col gap-6 px-6 py-6 md:flex-row md:items-center md:justify-between', passed ? 'bg-success text-white' : 'bg-danger text-white')}>
           <div role={passed ? 'status' : 'alert'}>
-            <p className="tag text-white/75">03 / Verification</p>
+            <p className="tag text-white/75">02 / Verification</p>
             <h2 className="mt-2 font-display text-[34px] leading-none font-bold uppercase sm:text-[44px]">
               {passed ? 'Targeted text verification passed' : 'Verification failed'}
             </h2>

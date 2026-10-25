@@ -62,39 +62,6 @@ export function bboxToPercent(bbox: BBox, pageWidth: number, pageHeight: number,
   }
 }
 
-export interface TextSegment {
-  text: string
-  finding?: Finding
-}
-
-/**
- * Splits extracted page text into plain runs and runs that are exactly a finding's value.
- * Longer values win when matches overlap.
- */
-export function segmentText(text: string, findings: Finding[]): TextSegment[] {
-  const matches: { start: number; end: number; finding: Finding }[] = []
-  for (const finding of findings) {
-    if (!finding.text) continue
-    let from = 0
-    for (let at = text.indexOf(finding.text, from); at !== -1; at = text.indexOf(finding.text, from)) {
-      matches.push({ start: at, end: at + finding.text.length, finding })
-      from = at + finding.text.length
-    }
-  }
-  matches.sort((a, b) => a.start - b.start || b.end - a.end)
-
-  const segments: TextSegment[] = []
-  let cursor = 0
-  for (const m of matches) {
-    if (m.start < cursor) continue
-    if (m.start > cursor) segments.push({ text: text.slice(cursor, m.start) })
-    segments.push({ text: text.slice(m.start, m.end), finding: m.finding })
-    cursor = m.end
-  }
-  if (cursor < text.length) segments.push({ text: text.slice(cursor) })
-  return segments
-}
-
 export function pagesOf(finding: Finding): number[] {
   return [...new Set(finding.locations.map((l) => l.page))].sort((a, b) => a - b)
 }

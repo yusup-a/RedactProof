@@ -147,13 +147,3 @@ export function Logo() {
 export function Swatch({ className }: { className: string }) {
   return <span className={cx('inline-block size-3 shrink-0 border-[1.5px]', className)} aria-hidden />
 }
-
-/** Section heading with an optional index number, e.g. "02 Attacker view". */
-export function SectionTitle({ index, children, className }: { index?: string; children: ReactNode; className?: string }) {
-  return (
-    <h2 className={cx('flex items-baseline gap-3 font-display text-[28px] leading-none font-bold tracking-[-0.01em] text-ink uppercase', className)}>
-      {index && <span className="font-mono text-[13px] font-medium tracking-normal text-muted">{index}</span>}
-      {children}
-    </h2>
-  )
-}

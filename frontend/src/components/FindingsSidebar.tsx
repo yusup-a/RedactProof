@@ -75,8 +75,8 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
           <div className="p-6">
             <p className="font-display text-[20px] font-bold text-ink uppercase">No sensitive values detected</p>
             <p className="mt-2 text-[14px] leading-relaxed text-body">
-              Neither detector flagged anything in this PDF's text. That isn't proof the document is clean — check the
-              Attacker View to see everything a machine can extract.
+              Nothing in this PDF's text was flagged. That isn't proof the document is clean — review it before you share
+              it.
             </p>
           </div>
         ) : (

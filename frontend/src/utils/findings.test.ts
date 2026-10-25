@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Finding } from '../api/types'
-import { bboxToPercent, groupFindings, segmentText, sourceKind } from './findings'
+import { bboxToPercent, groupFindings, sourceKind } from './findings'
 
 function finding(overrides: Partial<Finding>): Finding {
   return {
@@ -33,33 +33,6 @@ describe('bboxToPercent', () => {
   it('clamps padding to the page edges', () => {
     const style = bboxToPercent([0, 0, 612, 792], 612, 792, 4)
     expect(style).toEqual({ left: '0%', top: '0%', width: '100%', height: '100%' })
-  })
-})
-
-describe('segmentText', () => {
-  const account = finding({ id: 'a', text: '987654321012' })
-  const email = finding({ id: 'e', text: 'jo@example.com' })
-
-  it('marks every occurrence of each value', () => {
-    const segments = segmentText('Acct 987654321012\nMail jo@example.com\nAgain 987654321012', [account, email])
-    expect(segments.map((s) => [s.text, s.finding?.id])).toEqual([
-      ['Acct ', undefined],
-      ['987654321012', 'a'],
-      ['\nMail ', undefined],
-      ['jo@example.com', 'e'],
-      ['\nAgain ', undefined],
-      ['987654321012', 'a'],
-    ])
-  })
-
-  it('prefers the longer value when matches overlap', () => {
-    const short = finding({ id: 's', text: '4321' })
-    const segments = segmentText('No. 987654321012', [short, account])
-    expect(segments.map((s) => s.finding?.id)).toEqual([undefined, 'a'])
-  })
-
-  it('returns plain text when nothing matches', () => {
-    expect(segmentText('nothing here', [account])).toEqual([{ text: 'nothing here' }])
   })
 })
 

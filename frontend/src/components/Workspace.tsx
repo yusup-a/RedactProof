@@ -1,15 +1,13 @@
 import { useRef, useState, type KeyboardEvent } from 'react'
-import { ArrowRight } from 'lucide-react'
 import type { AnalysisResponse, RedactionResult } from '../api/types'
 import { api } from '../api/client'
-import { AttackerView } from './AttackerView'
 import { DocumentViewer } from './DocumentViewer'
 import { FindingsSidebar } from './FindingsSidebar'
 import { RedactionControls } from './RedactionControls'
 import { VerificationReport } from './VerificationReport'
 import { Button, PageNav, Swatch, cx } from './ui'
 
-export type Tab = 'review' | 'attacker' | 'report'
+export type Tab = 'review' | 'report'
 
 interface WorkspaceProps {
   analysis: AnalysisResponse
@@ -29,7 +27,6 @@ interface TabDef {
   id: Tab
   label: string
   badge?: string
-  alert?: boolean
   disabled?: boolean
 }
 
@@ -51,7 +48,6 @@ export function Workspace(props: WorkspaceProps) {
 
   const tabs: TabDef[] = [
     { id: 'review', label: 'Review findings', badge: String(analysis.findings.length) },
-    { id: 'attacker', label: 'Attacker view', badge: hiddenCount > 0 ? `${hiddenCount} hidden` : undefined, alert: true },
     { id: 'report', label: 'Verification report', disabled: !result },
   ]
 
@@ -109,16 +105,6 @@ export function Workspace(props: WorkspaceProps) {
                   reservedHeight={470}
                 />
               </div>
-              {hiddenCount > 0 && (
-                <button
-                  type="button"
-                  onClick={() => onTabChange('attacker')}
-                  className="group flex w-full items-center gap-3 border-t-[1.5px] border-ink bg-danger px-4 py-3 text-left text-[14px] font-semibold text-white hover:bg-danger-ink"
-                >
-                  <span className="flex-1">This PDF has text hidden under black boxes that is still extractable. Open the Attacker View</span>
-                  <ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-1" strokeWidth={2.5} aria-hidden />
-                </button>
-              )}
             </section>
             <FindingsSidebar
               findings={analysis.findings}
@@ -149,7 +135,6 @@ export function Workspace(props: WorkspaceProps) {
             />
           </div>
         )}
-        {tab === 'attacker' && <AttackerView analysis={analysis} result={result} page={page} onPageChange={setPage} />}
         {tab === 'report' && result && (
           <VerificationReport
             analysis={analysis}
@@ -180,7 +165,7 @@ function TabBar({ tabs, value, onChange }: { tabs: TabDef[]; value: Tab; onChang
 
   return (
     <div role="tablist" aria-label="Workspace" onKeyDown={onKeyDown} className="flex overflow-x-auto border-b-2 border-ink">
-      {tabs.map(({ id, label, badge, alert, disabled }, i) => {
+      {tabs.map(({ id, label, badge, disabled }, i) => {
         const selected = id === value
         return (
           <button
@@ -209,7 +194,7 @@ function TabBar({ tabs, value, onChange }: { tabs: TabDef[]; value: Tab; onChang
               <span
                 className={cx(
                   'px-1.5 py-px font-mono text-[11px] font-semibold tracking-normal normal-case',
-                  alert ? 'bg-danger text-white' : selected ? 'bg-marker text-ink' : 'bg-surface-3 text-ink',
+                  selected ? 'bg-marker text-ink' : 'bg-surface-3 text-ink',
                 )}
               >
                 {badge}
