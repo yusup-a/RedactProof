@@ -24,7 +24,7 @@ export function AppShell({ health, onHome, children }: { health: HealthState; on
           MOCK MODE — showing built-in sample data. Nothing is sent to the backend.
         </div>
       )}
-      <header className="sticky top-0 z-30 border-b-2 border-ink bg-paper">
+      <header className="sticky top-0 z-30 bg-paper">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-8">
           <button type="button" onClick={onHome} className="flex items-center" aria-label="RedactProof AI home">
             <Logo />
