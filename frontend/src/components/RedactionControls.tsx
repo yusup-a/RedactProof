@@ -45,7 +45,7 @@ export function RedactionControls({ findings, selectedIds, redacting, disabled, 
         )}
       </div>
       <Button variant="primary" size="lg" className="w-full" disabled={disabled || selected.length === 0} loading={redacting} onClick={onRedact}>
-        {redacting ? 'Redacting and verifying…' : 'Securely Redact Selected'}
+        {redacting ? 'Redacting and verifying…' : 'Redact'}
       </Button>
     </div>
   )

@@ -39,7 +39,7 @@ src/
     DocumentViewer       page preview at true aspect ratio with FindingHighlight overlays
     FindingsSidebar      grouped findings, select all / per group, mask + reveal
     FindingCard          one finding: masked value, risk, sources, locations
-    RedactionControls    Screen D: "Securely Redact Selected"
+    RedactionControls    Screen D: the "Redact" button
     VerificationReport   Screen E: status, counts, removed values, download
     BeforeAfterViewer    original vs redacted previews
 ```
