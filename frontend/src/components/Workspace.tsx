@@ -93,7 +93,7 @@ export function Workspace(props: WorkspaceProps) {
                 </div>
                 <PageNav page={current.page} count={analysis.pages.length} onChange={setPage} />
               </div>
-              <div className="bg-surface-3 p-6">
+              <div className="bg-surface p-6">
                 <DocumentViewer
                   page={current}
                   imageUrl={api.url(current.preview_url)}
@@ -193,7 +193,7 @@ function TabBar({ tabs, value, onChange }: { tabs: TabDef[]; value: Tab; onChang
               <span
                 className={cx(
                   'px-1.5 py-px font-mono text-[11px] font-semibold tracking-normal normal-case',
-                  selected ? 'bg-marker text-ink' : 'bg-surface-3 text-ink',
+                  selected ? 'bg-marker text-ink' : 'border border-line text-ink',
                 )}
               >
                 {badge}

@@ -30,7 +30,7 @@ export function FindingCard({ finding, selected, active, revealed, disabled, onS
       ref={ref}
       className={cx(
         'flex gap-3 border-b border-line py-3 pr-4 pl-3 transition-colors last:border-b-0',
-        active ? 'border-l-4 border-l-ink bg-marker/35 pl-2' : 'border-l-4 border-l-transparent hover:bg-surface-2',
+        active ? 'border-l-4 border-l-ink bg-marker/35 pl-2' : 'border-l-4 border-l-transparent hover:bg-marker/15',
       )}
     >
       <Checkbox

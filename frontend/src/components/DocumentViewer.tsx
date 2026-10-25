@@ -58,9 +58,9 @@ export function DocumentViewer({
           className={cx('absolute inset-0 h-full w-full select-none transition-opacity duration-200', loaded ? 'opacity-100' : 'opacity-0')}
         />
       )}
-      {!loaded && !failed && <div className="absolute inset-0 animate-pulse bg-surface-3" aria-hidden />}
+      {!loaded && !failed && <div className="absolute inset-0 animate-pulse bg-line/50" aria-hidden />}
       {failed && (
-        <div role="alert" className="absolute inset-0 flex items-center justify-center bg-surface-2 p-8 text-center font-mono text-[12px] leading-relaxed text-body">
+        <div role="alert" className="absolute inset-0 flex items-center justify-center bg-surface p-8 text-center font-mono text-[12px] leading-relaxed text-body">
           Preview unavailable. The session may have expired — upload the PDF again.
         </div>
       )}

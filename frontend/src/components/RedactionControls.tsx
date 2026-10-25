@@ -16,7 +16,7 @@ export function RedactionControls({ findings, selectedIds, redacting, disabled, 
   const locations = selected.reduce((n, f) => n + f.locations.length, 0)
 
   return (
-    <div className="border-t-[1.5px] border-ink bg-surface-2 p-4">
+    <div className="border-t-[1.5px] border-ink bg-surface p-4">
       {error && (
         <div role="alert" className="mb-3 border-[1.5px] border-danger bg-danger px-3 py-2 text-[13px] font-medium text-white">
           {error}

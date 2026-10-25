@@ -22,7 +22,7 @@ export function BeforeAfterViewer({ analysis, result, page, onPageChange }: Befo
         <h3 className="font-display text-[20px] font-bold text-ink uppercase">Before / after</h3>
         <PageNav page={page} count={Math.min(analysis.pages.length, result.pages.length)} onChange={onPageChange} />
       </div>
-      <div className="grid bg-surface-3 md:grid-cols-2">
+      <div className="grid bg-surface md:grid-cols-2">
         <figure className="p-6">
           <figcaption className="mb-4 flex items-center gap-4">
             <span className="tag text-ink">Original</span>
