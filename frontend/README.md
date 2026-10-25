@@ -1,6 +1,6 @@
 # RedactProof AI — Frontend
 
-React + TypeScript + Vite + Tailwind CSS v4 + Lucide icons, with IBM Plex fonts bundled locally via `@fontsource` (no third-party font requests).
+React + TypeScript + Vite + Tailwind CSS v4 + Lucide icons, with the Hanken Grotesk font (a free, OFL-licensed stand-in for Neue Montreal) bundled locally via `@fontsource` (no third-party font requests). To use real Neue Montreal, add licensed web-font files and point `--font-sans` in `src/index.css` at them.
 
 ## Run locally
 

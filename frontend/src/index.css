@@ -1,24 +1,20 @@
 @import 'tailwindcss';
 
-/* Self-hosted type (no third-party font requests). */
-@import '@fontsource/ibm-plex-sans/400.css';
-@import '@fontsource/ibm-plex-sans/500.css';
-@import '@fontsource/ibm-plex-sans/600.css';
-@import '@fontsource/ibm-plex-sans/700.css';
-@import '@fontsource/ibm-plex-sans-condensed/600.css';
-@import '@fontsource/ibm-plex-sans-condensed/700.css';
-@import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/500.css';
-@import '@fontsource/ibm-plex-mono/600.css';
+/* Self-hosted type (no third-party font requests). Hanken Grotesk stands in for Neue Montreal. */
+@import '@fontsource/hanken-grotesk/400.css';
+@import '@fontsource/hanken-grotesk/500.css';
+@import '@fontsource/hanken-grotesk/600.css';
+@import '@fontsource/hanken-grotesk/700.css';
 
 /*
  * Design tokens. Components use these names only (bg-paper, text-danger-ink, border-ink…),
  * so the whole UI can be re-themed from this block. Corners are square by design.
  */
 @theme {
-  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'IBM Plex Sans Condensed', 'IBM Plex Sans', ui-sans-serif, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* One typeface everywhere; display and data styles differ by weight, case and tracking. */
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: var(--font-sans);
 
   /* Paper and ink */
   --color-paper: #f1eee6;
@@ -53,6 +49,7 @@
 
 @layer base {
   html {
+    font-variant-numeric: tabular-nums;
     background: var(--color-paper);
     color: var(--color-body);
     -webkit-font-smoothing: antialiased;
