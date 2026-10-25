@@ -5,12 +5,11 @@ import { api } from '../api/client'
 import { AttackerView } from './AttackerView'
 import { DocumentViewer } from './DocumentViewer'
 import { FindingsSidebar } from './FindingsSidebar'
-import { GeminiInsights, GeminiStatusLine } from './GeminiInsights'
 import { RedactionControls } from './RedactionControls'
 import { VerificationReport } from './VerificationReport'
 import { Button, PageNav, Swatch, cx } from './ui'
 
-export type Tab = 'review' | 'attacker' | 'gemini' | 'report'
+export type Tab = 'review' | 'attacker' | 'report'
 
 interface WorkspaceProps {
   analysis: AnalysisResponse
@@ -53,7 +52,6 @@ export function Workspace(props: WorkspaceProps) {
   const tabs: TabDef[] = [
     { id: 'review', label: 'Review findings', badge: String(analysis.findings.length) },
     { id: 'attacker', label: 'Attacker view', badge: hiddenCount > 0 ? `${hiddenCount} hidden` : undefined, alert: true },
-    { id: 'gemini', label: 'Gemini insights' },
     { id: 'report', label: 'Verification report', disabled: !result },
   ]
 
@@ -129,7 +127,14 @@ export function Workspace(props: WorkspaceProps) {
               disabled={redacting || expired}
               onSelect={onSelect}
               onActivate={activate}
-              status={<GeminiStatusLine analysis={analysis} onDetails={() => onTabChange('gemini')} />}
+              status={
+                analysis.gemini_status !== 'ok' && (
+                  <p className="border-[1.5px] border-warning bg-warning-soft px-3 py-2 text-[13px] leading-snug text-warning-ink">
+                    <span className="font-semibold">Contextual analysis was unavailable.</span> Showing pattern-based results
+                    only — some values may not be detected.
+                  </p>
+                )
+              }
               footer={
                 <RedactionControls
                   findings={analysis.findings}
@@ -145,7 +150,6 @@ export function Workspace(props: WorkspaceProps) {
           </div>
         )}
         {tab === 'attacker' && <AttackerView analysis={analysis} result={result} page={page} onPageChange={setPage} />}
-        {tab === 'gemini' && <GeminiInsights analysis={analysis} />}
         {tab === 'report' && result && (
           <VerificationReport
             analysis={analysis}

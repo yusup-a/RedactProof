@@ -33,22 +33,21 @@ src/
     mock.ts        labeled mock service (SVG page, no Gemini)
   utils/findings.ts  labels, grouping, bbox → % positioning, extracted-text segmentation
   components/
-    AppShell             header, backend/Gemini status, mock banner
-    UploadZone           Screen A: drag-and-drop, client-side checks, privacy notice, analyzing state
+    AppShell             header, backend-offline badge, mock banner
+    UploadZone           Screen A: drag-and-drop, client-side checks, analyzing state
     Workspace            tabs + review layout (Screen B)
     DocumentViewer       page preview at true aspect ratio with FindingHighlight overlays
     FindingsSidebar      grouped findings, select all / per group, mask + reveal
     FindingCard          one finding: masked value, risk, sources, locations
     RedactionControls    Screen D: "Securely Redact Selected"
     AttackerView         Screen C: visual vs extracted text, before and after
-    GeminiInsights       Screen F: regex vs Gemini, stats, contextual example
     VerificationReport   Screen E: status, counts, limitations, download
     BeforeAfterViewer    original vs redacted previews
 ```
 
 ## Theming
 
-All colors, fonts and shadows are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `marker`, `danger`, `warning`, `success`, `gemini`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square throughout by design.
+All colors, fonts and shadows are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `marker`, `danger`, `warning`, `success`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square throughout by design.
 
 Earlier designs are saved as git tags:
 
@@ -66,9 +65,9 @@ To view one: `git checkout <tag>`. To bring one back on the branch: `git restore
 - **Masking**: the UI shows `display` by default; `text` appears only after the user reveals it.
 - **Attacker View** renders `pages[].extracted_text` from `/api/analyze` (before) and from `/api/redact` (after). The black-box warning only appears when the backend reports `visually_hidden: true`.
 - **Verification**: success is shown only when `verification.status === "passed"`, worded as "Targeted text verification passed". Failure lists `remaining`, and the download is labeled unverified.
-- **Gemini panel** uses `gemini_status`, `gemini_message`, `gemini_model`, `gemini_stats` and each finding's `source`. When Gemini is `unavailable` or `error`, the panel says so and the regex results stay usable.
+- **Gemini is not named anywhere in the UI**, and there is no privacy notice, model badge or list of PDF limits (product decision). The only Gemini field read is `gemini_status`: when it isn't `ok`, the findings panel shows a neutral “contextual analysis was unavailable” notice so users know results are pattern-only. Limits are still enforced, and the error messages explain them when a file is rejected.
 - **Errors** show the backend's `message`. `SESSION_EXPIRED_OR_NOT_FOUND` locks the workspace and offers "Upload again"; a failed preview image shows a placeholder.
 
 ## Screenshots
 
-`screenshots/` holds captures of the real app against the real backend with Gemini enabled, using the synthetic PDFs in `demo/samples/`. No mock data.
+`screenshots/` holds captures of the real app against the real backend with Gemini enabled on the backend, using the synthetic PDFs in `demo/samples/`. No mock data.

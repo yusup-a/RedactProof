@@ -12,7 +12,7 @@ interface FindingsSidebarProps {
   disabled: boolean
   onSelect: (ids: string[], checked: boolean) => void
   onActivate: (id: string, page?: number) => void
-  status: ReactNode
+  status?: ReactNode
   footer: ReactNode
 }
 
@@ -52,7 +52,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
             </Button>
           )}
         </div>
-        <div className="mt-3">{status}</div>
+        {status && <div className="mt-3">{status}</div>}
         {findings.length > 0 && (
           <label className="mt-3 flex cursor-pointer items-center gap-3 text-[14px] font-semibold text-ink">
             <Checkbox

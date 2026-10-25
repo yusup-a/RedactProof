@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import type { Finding } from '../api/types'
 import { TYPE_LABELS, pagesOf } from '../utils/findings'
-import { Checkbox, RiskBadge, SourceBadges, Tag, cx } from './ui'
+import { Checkbox, RiskBadge, Tag, cx } from './ui'
 
 interface FindingCardProps {
   finding: Finding
@@ -70,16 +70,10 @@ export function FindingCard({ finding, selected, active, revealed, disabled, onS
         <p className="mt-1 text-[13px] leading-snug text-body">{finding.reason}</p>
 
         <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-          <SourceBadges finding={finding} />
           {finding.visually_hidden && (
             <Tag className="border-danger bg-danger-soft text-danger-ink" title="Covered by a dark shape, but the text is still extractable">
               Hidden · extractable
             </Tag>
-          )}
-          {finding.confidence && (
-            <span className="font-mono text-[11px] text-muted" title="Gemini's confidence in this finding">
-              conf. {finding.confidence}
-            </span>
           )}
           <span className="ml-auto flex items-center gap-1 font-mono text-[11px] text-muted">
             {count > 1 && <span className="mr-0.5">×{count}</span>}

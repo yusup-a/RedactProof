@@ -1,7 +1,6 @@
 import { useEffect, useRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
-import type { Finding, Risk } from '../api/types'
-import { sourceKind } from '../utils/findings'
+import type { Risk } from '../api/types'
 
 export function cx(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(' ')
@@ -70,24 +69,6 @@ export function RiskBadge({ risk }: { risk: Risk }) {
     <Tag className={RISK_STYLES[risk]} title={`${risk.toLowerCase()} risk`}>
       {risk}
     </Tag>
-  )
-}
-
-export function SourceBadges({ finding }: { finding: Finding }) {
-  const kind = sourceKind(finding)
-  return (
-    <span className="inline-flex gap-1">
-      {kind !== 'gemini' && (
-        <Tag className="border-ink bg-surface text-ink" title="Found by the deterministic pattern scanner">
-          Regex
-        </Tag>
-      )}
-      {kind !== 'regex' && (
-        <Tag className="border-gemini bg-gemini text-white" title="Identified by Google Gemini">
-          Gemini
-        </Tag>
-      )}
-    </span>
   )
 }
 

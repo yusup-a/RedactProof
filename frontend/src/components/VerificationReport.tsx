@@ -1,7 +1,7 @@
 import { ArrowLeft, Download } from 'lucide-react'
 import type { AnalysisResponse, RedactionResult } from '../api/types'
 import { USE_MOCK, api } from '../api/client'
-import { TYPE_LABELS, sourceKind } from '../utils/findings'
+import { TYPE_LABELS } from '../utils/findings'
 import { BeforeAfterViewer } from './BeforeAfterViewer'
 import { Button, cx } from './ui'
 
@@ -19,8 +19,6 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
   const passed = v.status === 'passed'
   const byId = new Map(analysis.findings.map((f) => [f.id, f]))
   const redacted = result.redacted_finding_ids.map((id) => byId.get(id)).filter((f) => f !== undefined)
-  const viaGemini = redacted.filter((f) => f.source.includes('gemini')).length
-  const geminiOnly = redacted.filter((f) => sourceKind(f) === 'gemini').length
   const canDownload = !USE_MOCK && result.download_url !== ''
 
   const stats: [string, number, string?][] = [
@@ -36,7 +34,7 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
       <section aria-label="Verification status" className="border-[1.5px] border-ink bg-surface shadow-hard">
         <div className={cx('flex flex-col gap-6 px-6 py-6 md:flex-row md:items-center md:justify-between', passed ? 'bg-success text-white' : 'bg-danger text-white')}>
           <div role={passed ? 'status' : 'alert'}>
-            <p className="tag text-white/75">04 / Verification</p>
+            <p className="tag text-white/75">03 / Verification</p>
             <h2 className="mt-2 font-display text-[34px] leading-none font-bold uppercase sm:text-[44px]">
               {passed ? 'Targeted text verification passed' : 'Verification failed'}
             </h2>
@@ -95,7 +93,7 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
 
       <BeforeAfterViewer analysis={analysis} result={result} page={page} onPageChange={onPageChange} />
 
-      <div className="grid border-[1.5px] border-ink bg-surface lg:grid-cols-3">
+      <div className="grid border-[1.5px] border-ink bg-surface lg:grid-cols-2">
         <section aria-label="Removed values" className="p-6">
           <h3 className="font-display text-[20px] font-bold text-ink uppercase">Removed values</h3>
           <ul className="mt-4 border-t-[1.5px] border-ink">
@@ -109,33 +107,6 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
               </li>
             ))}
           </ul>
-        </section>
-
-        <section aria-label="Gemini contribution" className="border-ink p-6 max-lg:border-t-[1.5px] lg:border-l-[1.5px]">
-          <h3 className="font-display text-[20px] font-bold text-ink uppercase">Gemini contribution</h3>
-          {analysis.gemini_status === 'ok' ? (
-            <>
-              <p className="mt-4 flex items-baseline gap-3">
-                <span className="font-display text-[64px] leading-none font-bold text-gemini tabular-nums">{viaGemini}</span>
-                <span className="text-[15px] text-body">of {redacted.length} removed values were identified by Gemini.</span>
-              </p>
-              <p className="mt-3 text-[15px] leading-relaxed text-body">
-                {geminiOnly > 0 ? (
-                  <>
-                    <span className="bg-gemini px-1 font-semibold text-white">{geminiOnly}</span> {geminiOnly === 1 ? 'was' : 'were'} found by
-                    Gemini alone — the pattern scanner would have missed {geminiOnly === 1 ? 'it' : 'them'}.
-                  </>
-                ) : (
-                  'Every removed value was also caught by the pattern scanner.'
-                )}
-              </p>
-            </>
-          ) : (
-            <p className="mt-4 text-[15px] leading-relaxed text-body">
-              Gemini {analysis.gemini_status === 'unavailable' ? 'is not configured' : 'failed'} for this document, so every
-              removed value came from deterministic pattern scanning.
-            </p>
-          )}
         </section>
 
         <section aria-label="Verification method and limitations" className="border-ink p-6 max-lg:border-t-[1.5px] lg:border-l-[1.5px]">

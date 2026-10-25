@@ -113,7 +113,6 @@ export default function App() {
         />
       ) : (
         <UploadZone
-          health={health}
           analyzing={analyzing}
           error={uploadError}
           onFile={analyze}

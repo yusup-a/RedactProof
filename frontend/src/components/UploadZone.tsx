@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState, type DragEvent } from 'react'
 import { ArrowDown, Loader2 } from 'lucide-react'
-import type { HealthState } from './AppShell'
 import { formatBytes } from '../utils/findings'
 import { Button, cx } from './ui'
 
 const MAX_BYTES = 5 * 1024 * 1024
 
 interface UploadZoneProps {
-  health: HealthState
   analyzing: File | null
   error: string | null
   onFile: (file: File) => void
@@ -24,17 +22,16 @@ function validate(file: File): string | null {
 }
 
 const STEPS = [
-  { title: 'Detect', body: 'A pattern scanner and Google Gemini each look for sensitive values — including ones that need context to spot.' },
+  { title: 'Detect', body: 'Pattern matching and contextual analysis look for sensitive values — including ones that have no fixed format.' },
   { title: 'Remove', body: 'The values you pick are deleted from the PDF itself. Not painted over. Deleted.' },
   { title: 'Verify', body: 'The saved file is reopened and searched again for every value you removed.' },
 ]
 
-export function UploadZone({ health, analyzing, error, onFile, onCancel }: UploadZoneProps) {
+export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZoneProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
 
-  const geminiOn = health.status === 'ok' ? health.health.gemini_configured : true
   const shownError = localError ?? error
 
   function accept(files: FileList | null) {
@@ -88,12 +85,11 @@ export function UploadZone({ health, analyzing, error, onFile, onCancel }: Uploa
           )}
         >
           {analyzing ? (
-            <AnalyzingState file={analyzing} gemini={geminiOn} onCancel={onCancel} />
+            <AnalyzingState file={analyzing} onCancel={onCancel} />
           ) : (
             <>
               <ArrowDown className="size-8 text-ink" strokeWidth={2.25} aria-hidden />
               <p className="mt-6 font-display text-[32px] leading-none font-bold text-ink uppercase">Drop a PDF here</p>
-              <p className="mt-3 font-mono text-[12px] text-muted">PDF only · up to 5 MB · up to 3 pages · text-based (no scans)</p>
               <div className="mt-8">
                 <Button variant="primary" size="lg" onClick={() => inputRef.current?.click()}>
                   Browse files
@@ -121,20 +117,12 @@ export function UploadZone({ health, analyzing, error, onFile, onCancel }: Uploa
           </div>
         )}
 
-        <div className="mt-6 border-l-4 border-ink pl-4 text-[13px] leading-relaxed text-body">
-          <p className="tag mb-1 text-ink">Privacy notice</p>
-          {geminiOn
-            ? 'The PDF you upload is sent to the Google Gemini API for analysis (third-party processing). '
-            : 'Gemini is not configured on this server, so your PDF is only scanned locally by the backend. '}
-          Documents are kept in server memory for 30 minutes and never stored on disk.{' '}
-          <span className="font-semibold text-ink">Use synthetic demo documents only.</span>
-        </div>
       </div>
     </div>
   )
 }
 
-function AnalyzingState({ file, gemini, onCancel }: { file: File; gemini: boolean; onCancel: () => void }) {
+function AnalyzingState({ file, onCancel }: { file: File; onCancel: () => void }) {
   const [seconds, setSeconds] = useState(0)
   useEffect(() => {
     const started = Date.now()
@@ -147,9 +135,7 @@ function AnalyzingState({ file, gemini, onCancel }: { file: File; gemini: boolea
       <Loader2 className="size-8 animate-spin text-ink" strokeWidth={2.25} aria-hidden />
       <p className="mt-6 font-display text-[28px] leading-tight font-bold break-all text-ink uppercase">Analyzing {file.name}</p>
       <p className="mt-3 max-w-md text-[14px] leading-relaxed text-body">
-        {gemini
-          ? 'Running the pattern scanner and asking Gemini for contextual identifiers. This can take up to a minute.'
-          : 'Running the deterministic pattern scanner.'}
+        Scanning the document for sensitive values. This can take up to a minute.
       </p>
       <p className="mt-3 font-mono text-[12px] text-muted tabular-nums">
         {formatBytes(file.size)} · {seconds}s elapsed

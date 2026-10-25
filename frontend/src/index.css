@@ -50,11 +50,6 @@
   --color-success-soft: #dff0e5;
   --color-success-line: #9fd1b2;
 
-  --color-gemini: #2b3bff;
-  --color-gemini-ink: #1f2bd1;
-  --color-gemini-soft: #e7e9ff;
-  --color-gemini-line: #b3b9ff;
-
   --shadow-hard: 4px 4px 0 0 var(--color-ink);
   --shadow-hard-sm: 2px 2px 0 0 var(--color-ink);
 }
