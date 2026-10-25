@@ -7,8 +7,6 @@ interface BeforeAfterViewerProps {
   result: RedactionResult
 }
 
-const READER_HEIGHT = 'h-[calc(100vh-14rem)] min-h-[480px]'
-
 export function BeforeAfterViewer({ analysis, result }: BeforeAfterViewerProps) {
   const redacted = new Set(result.redacted_finding_ids)
   const removed = analysis.findings.filter((f) => redacted.has(f.id))
@@ -27,13 +25,13 @@ export function BeforeAfterViewer({ analysis, result }: BeforeAfterViewerProps) 
               <Swatch className="border-success" /> redacted info
             </span>
           </figcaption>
-          <PdfReader filename={analysis.filename} pages={analysis.pages} findings={removed} toneFor={() => 'redacted'} heightClass={READER_HEIGHT} />
+          <PdfReader filename={analysis.filename} pages={analysis.pages} findings={removed} toneFor={() => 'redacted'} />
         </figure>
         <figure className="min-w-0 border-ink max-md:border-t-[1.5px] md:border-l-[1.5px]">
           <figcaption className="flex h-12 items-center border-b border-line px-5">
             <span className="text-[14px] font-semibold text-ink">Redacted</span>
           </figcaption>
-          <PdfReader filename={redactedName} pages={result.pages} heightClass={READER_HEIGHT} />
+          <PdfReader filename={redactedName} pages={result.pages} />
         </figure>
       </div>
     </section>

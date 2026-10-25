@@ -38,7 +38,7 @@ export function PdfReader({
   focusKey = 0,
   onFindingClick,
   toneFor,
-  heightClass = 'h-[calc(100vh-25.5rem)] min-h-[420px]',
+  heightClass = 'h-[calc(100vh-30rem)] min-h-[360px]',
 }: PdfReaderProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const pageRefs = useRef<(HTMLDivElement | null)[]>([])

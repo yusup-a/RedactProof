@@ -34,7 +34,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
   }
 
   return (
-    <section aria-label="Findings" className="panel flex max-h-[calc(100vh-19.5rem)] min-h-[460px] flex-col lg:sticky lg:top-24">
+    <section aria-label="Findings" className="panel flex max-h-[calc(100vh-23.25rem)] min-h-[460px] flex-col lg:sticky lg:top-24">
       <div className="border-b-[1.5px] border-ink p-4">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-display text-[24px] leading-none font-bold text-ink">
