@@ -21,12 +21,6 @@ function validate(file: File): string | null {
   return null
 }
 
-const STEPS = [
-  { title: 'Detect', body: 'Pattern matching and contextual analysis look for sensitive values — including ones that have no fixed format.' },
-  { title: 'Remove', body: 'The values you pick are deleted from the PDF itself. Not painted over. Deleted.' },
-  { title: 'Verify', body: 'The saved file is reopened and searched again for every value you removed.' },
-]
-
 export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZoneProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
@@ -49,7 +43,7 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
   }
 
   return (
-    <div className="grid gap-12 pt-2 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16 lg:pt-8">
+    <div className="grid items-center gap-10 lg:my-auto lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16 lg:pb-10">
       <div>
         <p className="tag text-muted">PDF redaction you can verify</p>
         <h1 className="mt-5 font-display text-[44px] leading-[1.02] font-bold tracking-[-0.015em] text-ink uppercase sm:text-[68px]">
@@ -59,19 +53,9 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           A black box drawn over PDF text usually leaves the text sitting in the file. Anyone can copy it out. RedactProof
           finds the sensitive values, deletes them for real, and proves they're gone.
         </p>
-
-        <ol className="mt-10 border-t-[1.5px] border-ink">
-          {STEPS.map(({ title, body }, i) => (
-            <li key={title} className="grid grid-cols-[48px_120px_minmax(0,1fr)] items-baseline gap-2 border-b border-line py-4 max-sm:grid-cols-[40px_minmax(0,1fr)]">
-              <span className="font-mono text-[13px] text-muted">0{i + 1}</span>
-              <span className="font-display text-[18px] font-bold text-ink uppercase">{title}</span>
-              <span className="text-[14px] leading-relaxed text-body max-sm:col-start-2">{body}</span>
-            </li>
-          ))}
-        </ol>
       </div>
 
-      <div className="lg:pt-10">
+      <div>
         <div
           onDragOver={(e) => {
             e.preventDefault()
@@ -80,7 +64,7 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           className={cx(
-            'flex min-h-[340px] flex-col justify-center border-2 border-dashed border-ink px-8 py-10 shadow-hard transition-colors',
+            'flex min-h-[280px] flex-col justify-center border-2 border-dashed border-ink px-8 py-8 shadow-hard transition-colors',
             dragging ? 'bg-marker' : 'bg-surface',
           )}
         >

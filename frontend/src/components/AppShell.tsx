@@ -33,7 +33,7 @@ export function AppShell({ health, onHome, children }: { health: HealthState; on
           <OfflineBadge state={health} />
         </div>
       </header>
-      <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-8 sm:px-8 sm:py-10">{children}</main>
+      <main className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-4 py-8 sm:px-8 sm:py-10">{children}</main>
       <footer className="border-t-[1.5px] border-ink">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-1 px-4 py-5 font-mono text-[12px] text-muted sm:flex-row sm:justify-between sm:px-8">
           <span>Because covering data isn't the same as removing it.</span>
