@@ -28,6 +28,10 @@
   /* Highlighter: active item, focus, revealed values */
   --color-marker: #ffdd33;
 
+  /* PDF reader chrome (matches a desktop browser's built-in PDF viewer) */
+  --color-reader-bar: #323639;
+  --color-reader-bg: #525659;
+
   /* Status: solid (fills, marks), ink (text on light), soft (tints), line (borders) */
   --color-danger: #d42a1f;
   --color-danger-ink: #a81d14;

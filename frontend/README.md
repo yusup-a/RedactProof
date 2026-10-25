@@ -36,7 +36,8 @@ src/
     AppShell             header, backend-offline badge, mock banner
     UploadZone           Screen A: drag-and-drop, client-side checks, analyzing state
     Workspace            tabs + review layout (Screen B)
-    DocumentViewer       page preview at true aspect ratio with FindingHighlight overlays
+    PdfReader            browser-style PDF reader: all pages in one scroll, page + zoom toolbar
+    DocumentViewer       one page preview at true aspect ratio with FindingHighlight overlays
     FindingsSidebar      grouped findings, select all / per group, mask + reveal
     FindingCard          one finding: masked value, risk, sources, locations
     RedactionControls    Screen D: the "Redact" button

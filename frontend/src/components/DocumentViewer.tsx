@@ -15,6 +15,13 @@ interface DocumentViewerProps {
   toneFor?: (finding: Finding, hidden: boolean) => HighlightTone
   /** Vertical space (px) reserved around the page, so it fits in the viewport without distortion. */
   reservedHeight?: number
+  /** Exact display width in px; overrides the viewport-fit sizing. */
+  width?: number
+  /** Draw an ink outline around the page. */
+  framed?: boolean
+  /** When set, the active finding's first box on this page scrolls into view (re-run when focusKey changes). */
+  scrollToActive?: boolean
+  focusKey?: number
   overlay?: ReactNode
 }
 
@@ -32,6 +39,10 @@ export function DocumentViewer({
   onFindingClick,
   toneFor,
   reservedHeight = 260,
+  width,
+  framed = true,
+  scrollToActive = false,
+  focusKey,
   overlay,
 }: DocumentViewerProps) {
   const [loadedUrl, setLoadedUrl] = useState<string | null>(null)
@@ -42,10 +53,10 @@ export function DocumentViewer({
 
   return (
     <div
-      className="relative mx-auto overflow-hidden border-[1.5px] border-ink bg-white"
+      className={cx('relative mx-auto shrink-0 overflow-hidden bg-white', framed && 'border-[1.5px] border-ink')}
       style={{
         aspectRatio: `${page.width} / ${page.height}`,
-        width: `min(100%, max(320px, calc((100vh - ${reservedHeight}px) * ${ratio})))`,
+        width: width !== undefined ? `${width}px` : `min(100%, max(320px, calc((100vh - ${reservedHeight}px) * ${ratio})))`,
       }}
     >
       {!failed && (
@@ -77,6 +88,8 @@ export function DocumentViewer({
                 pageHeight={page.height}
                 selected={selectedIds?.has(finding.id) ?? true}
                 active={activeId === finding.id}
+                scrollOnActive={scrollToActive && i === 0}
+                scrollKey={focusKey}
                 tone={toneFor?.(finding, loc.visually_hidden)}
                 onClick={onFindingClick && (() => onFindingClick(finding.id))}
               />

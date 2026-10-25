@@ -1,11 +1,10 @@
 import { useRef, useState, type KeyboardEvent } from 'react'
 import type { AnalysisResponse, RedactionResult } from '../api/types'
-import { api } from '../api/client'
-import { DocumentViewer } from './DocumentViewer'
 import { FindingsSidebar } from './FindingsSidebar'
+import { PdfReader } from './PdfReader'
 import { RedactionControls } from './RedactionControls'
 import { VerificationReport } from './VerificationReport'
-import { Button, PageNav, Swatch, cx } from './ui'
+import { Button, Swatch, cx } from './ui'
 
 export type Tab = 'review' | 'report'
 
@@ -32,18 +31,17 @@ interface TabDef {
 
 export function Workspace(props: WorkspaceProps) {
   const { analysis, result, selectedIds, onSelect, redacting, redactError, expired, tab, onTabChange, onRedact, onStartOver } = props
+  // Page shown in the report's before/after viewer.
   const [page, setPage] = useState(1)
-  const [activeId, setActiveId] = useState<string | null>(null)
+  // Active finding in the reader; `scroll` is false when it was clicked on the page itself.
+  const [focus, setFocus] = useState<{ id: string; page: number; scroll: boolean; key: number } | null>(null)
 
-  const current = analysis.pages.find((p) => p.page === page) ?? analysis.pages[0]
   const hiddenCount = analysis.findings.filter((f) => f.visually_hidden).length
 
-  function activate(id: string, targetPage?: number) {
+  function activate(id: string, targetPage?: number, scroll = true) {
     const finding = analysis.findings.find((f) => f.id === id)
     if (!finding) return
-    setActiveId(id)
-    const pages = finding.locations.map((l) => l.page)
-    setPage(targetPage ?? (pages.includes(page) ? page : pages[0]))
+    setFocus((prev) => ({ id, page: targetPage ?? finding.locations[0].page, scroll, key: (prev?.key ?? 0) + 1 }))
   }
 
   const tabs: TabDef[] = [
@@ -83,7 +81,7 @@ export function Workspace(props: WorkspaceProps) {
         {tab === 'review' && (
           <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(380px,440px)]">
             <section aria-label="Document preview" className="panel">
-              <div className="flex min-h-14 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b-[1.5px] border-ink px-4 py-2">
+              <div className="flex min-h-14 flex-wrap items-center gap-x-4 gap-y-2 border-b-[1.5px] border-ink px-4 py-2">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] text-body uppercase">
                   <span className="flex items-center gap-1.5"><Swatch className="border-danger bg-danger/15" /> High</span>
                   <span className="flex items-center gap-1.5"><Swatch className="border-warning bg-warning/20" /> Medium</span>
@@ -91,25 +89,22 @@ export function Workspace(props: WorkspaceProps) {
                   <span className="flex items-center gap-1.5"><Swatch className="border-dashed border-subtle" /> Not selected</span>
                   <span className="flex items-center gap-1.5"><Swatch className="border-ink bg-marker/55" /> Active</span>
                 </div>
-                <PageNav page={current.page} count={analysis.pages.length} onChange={setPage} />
               </div>
-              <div className="bg-surface p-6">
-                <DocumentViewer
-                  page={current}
-                  imageUrl={api.url(current.preview_url)}
-                  alt={`Page ${current.page} of ${analysis.filename}`}
-                  findings={analysis.findings}
-                  selectedIds={selectedIds}
-                  activeId={activeId}
-                  onFindingClick={(id) => activate(id, current.page)}
-                  reservedHeight={470}
-                />
-              </div>
+              <PdfReader
+                filename={analysis.filename}
+                pages={analysis.pages}
+                findings={analysis.findings}
+                selectedIds={selectedIds}
+                activeId={focus?.id ?? null}
+                focusPage={focus?.scroll ? focus.page : null}
+                focusKey={focus?.key ?? 0}
+                onFindingClick={(id, p) => activate(id, p, false)}
+              />
             </section>
             <FindingsSidebar
               findings={analysis.findings}
               selectedIds={selectedIds}
-              activeId={activeId}
+              activeId={focus?.id ?? null}
               disabled={redacting || expired}
               onSelect={onSelect}
               onActivate={activate}

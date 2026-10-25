@@ -13,15 +13,29 @@ interface FindingHighlightProps {
   selected: boolean
   active: boolean
   tone?: HighlightTone
+  /** Scroll this box into view when it becomes active (or when scrollKey changes while active). */
+  scrollOnActive?: boolean
+  scrollKey?: number
   onClick?: () => void
 }
 
 /** One outlined region over the page preview, positioned in PDF points scaled to the displayed image. */
-export function FindingHighlight({ finding, location, pageWidth, pageHeight, selected, active, tone = 'risk', onClick }: FindingHighlightProps) {
+export function FindingHighlight({ finding, location, pageWidth, pageHeight, selected, active, tone = 'risk', scrollOnActive = false, scrollKey, onClick }: FindingHighlightProps) {
   const ref = useRef<HTMLButtonElement>(null)
   useEffect(() => {
-    if (active) ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
-  }, [active])
+    const el = ref.current
+    if (!active || !scrollOnActive || !el) return
+    // Scroll only the reader, not the whole page.
+    const scroller = el.closest<HTMLElement>('[data-scroll-container]')
+    if (!scroller) return el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    const box = el.getBoundingClientRect()
+    const view = scroller.getBoundingClientRect()
+    scroller.scrollBy({
+      top: box.top - view.top - view.height / 2 + box.height / 2,
+      left: box.left < view.left || box.right > view.right ? box.left - view.left - view.width / 2 + box.width / 2 : 0,
+      behavior: 'smooth',
+    })
+  }, [active, scrollOnActive, scrollKey])
 
   const style = bboxToPercent(location.bbox, pageWidth, pageHeight, 2)
   const toneClass =
