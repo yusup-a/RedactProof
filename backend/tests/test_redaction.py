@@ -51,6 +51,49 @@ def test_redaction_removes_selected_and_preserves_the_rest():
     assert verifier.verify(output, findings, count).status == "passed"
 
 
+def test_redaction_keeps_adjacent_punctuation():
+    pdf = s.build_insecure_statement()
+    findings = findings_for(pdf, [Candidate("Priya Natarajan", "PERSON_NAME", "", ["gemini"], "high")])
+
+    output, _ = redactor.redact(pdf, findings)
+    text = text_of(output)
+
+    assert "Natarajan" not in text and "Priya" not in text
+    assert ", staff ID" in text
+
+
+def test_value_inside_a_longer_number_is_left_alone():
+    doc = pymupdf.open()
+    page = doc.new_page()
+    page.insert_text((72, 72), "Account Number: 112233445566")
+    page.insert_text((72, 90), "Invoice reference 99112233445566000")
+    pdf = doc.tobytes()
+
+    findings = findings_for(pdf, [Candidate("112233445566", "ACCOUNT_NUMBER", "", ["regex"])])
+    assert len(findings[0].locations) == 1
+
+    output, _ = redactor.redact(pdf, findings)
+    assert "99112233445566000" in text_of(output)
+    assert verifier.verify(output, findings, 1).status == "passed"
+
+
+def test_value_split_across_lines_is_found_and_removed():
+    doc = pymupdf.open()
+    page = doc.new_page()
+    page.insert_text((72, 72), "Mailing address: 77 Juniper Ridge Road,")
+    page.insert_text((72, 88), "Springfield, OR 97477")
+    pdf = doc.tobytes()
+    value = "77 Juniper Ridge Road, Springfield, OR 97477"
+
+    assert pdf_scanner.value_in_text(value, [text_of(pdf)])
+    findings = findings_for(pdf, [Candidate(value, "ADDRESS", "", ["gemini"])])
+    output, count = redactor.redact(pdf, findings)
+
+    assert count == 2
+    assert verifier.verify(output, findings, count).status == "passed"
+    assert "Juniper" not in text_of(output) and "Mailing address:" in text_of(output)
+
+
 def test_repeated_values_are_redacted_on_every_page():
     pdf = s.build_hr_record()
     findings = findings_for(pdf, [Candidate(s.HR_EMPLOYEE_ID, "EMPLOYEE_ID", "", ["gemini"], "high")])

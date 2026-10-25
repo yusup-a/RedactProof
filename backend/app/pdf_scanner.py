@@ -86,13 +86,44 @@ def detect_regex(texts: list[str]) -> list[Candidate]:
     return list(found.values())
 
 
-def _normalize_ws(s: str) -> str:
-    return " ".join(s.split())
+def _value_pattern(value: str) -> re.Pattern:
+    """Whole-value match: any whitespace between tokens, never part of a longer word or number."""
+    body = r"\s+".join(re.escape(token) for token in value.split())
+    return re.compile(rf"(?<![A-Za-z0-9]){body}(?![A-Za-z0-9])", re.IGNORECASE)
 
 
 def value_in_text(value: str, texts: list[str]) -> bool:
-    target = _normalize_ws(value)
-    return any(value in t or target in _normalize_ws(t) for t in texts)
+    pattern = _value_pattern(value)
+    return any(pattern.search(t) for t in texts)
+
+
+def _is_partial_word(rect: pymupdf.Rect, chars: list[dict]) -> bool:
+    """True if a search hit is glued to a letter or digit on either side (e.g. inside a longer number)."""
+    for c in chars:
+        x0, y0, x1, y1 = c["bbox"]
+        if not c["c"].isalnum() or not (y0 < (rect.y0 + rect.y1) / 2 < y1):
+            continue
+        if rect.x0 - 1 <= x1 <= rect.x0 + 0.5 or rect.x1 - 0.5 <= x0 <= rect.x1 + 1:
+            return True
+    return False
+
+
+def _page_chars(page: pymupdf.Page) -> list[dict]:
+    return [
+        char
+        for block in page.get_text("rawdict")["blocks"]
+        for line in block.get("lines", [])
+        for span in line["spans"]
+        for char in span["chars"]
+    ]
+
+
+def find_rects(page: pymupdf.Page, value: str) -> list[pymupdf.Rect]:
+    hits = page.search_for(value)
+    if not hits:
+        return []
+    chars = _page_chars(page)
+    return [rect for rect in hits if not _is_partial_word(rect, chars)]
 
 
 def _dark_fill_rects(page: pymupdf.Page) -> list[pymupdf.Rect]:
@@ -123,7 +154,7 @@ def locate(doc: pymupdf.Document, value: str) -> list[Location]:
     locations = []
     for index, page in enumerate(doc):
         covers = _dark_fill_rects(page)
-        for rect in page.search_for(value):
+        for rect in find_rects(page, value):
             bbox: BBox = tuple(round(v, 2) for v in (rect.x0, rect.y0, rect.x1, rect.y1))
             locations.append(Location(page=index + 1, bbox=bbox, visually_hidden=_is_hidden(rect, covers)))
     return locations
