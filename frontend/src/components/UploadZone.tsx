@@ -43,18 +43,7 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
   }
 
   return (
-    <div className="grid items-center gap-10 lg:my-auto lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16 lg:pb-10">
-      <div>
-        <p className="tag text-muted">PDF redaction you can verify</p>
-        <h1 className="mt-5 font-display text-[44px] leading-[1.02] font-bold tracking-[-0.015em] text-ink uppercase sm:text-[68px]">
-          <span className="inline-block bg-ink px-2 pt-[0.05em] leading-[0.9] text-paper">Covering</span> data isn't the same as removing it.
-        </h1>
-        <p className="mt-6 max-w-[540px] text-[17px] leading-relaxed text-body">
-          A black box drawn over PDF text usually leaves the text sitting in the file. Anyone can copy it out. RedactProof
-          finds the sensitive values, deletes them for real, and proves they're gone.
-        </p>
-      </div>
-
+    <div className="mx-auto my-auto w-full max-w-[640px] pb-10">
       <div>
         <div
           onDragOver={(e) => {
@@ -64,7 +53,7 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           className={cx(
-            'flex min-h-[280px] flex-col justify-center border-2 border-ink px-8 py-8 transition-colors',
+            'flex min-h-[300px] flex-col items-center justify-center border-2 border-ink px-8 py-10 text-center transition-colors',
             dragging ? 'bg-marker' : 'bg-surface',
           )}
         >
@@ -73,7 +62,7 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           ) : (
             <>
               <ArrowDown className="size-8 text-ink" strokeWidth={2.25} aria-hidden />
-              <p className="mt-6 font-display text-[32px] leading-none font-bold text-ink uppercase">Drop a PDF here</p>
+              <h1 className="mt-6 font-display text-[32px] leading-tight font-bold text-ink uppercase">Upload a PDF to redact</h1>
               <div className="mt-8">
                 <Button variant="primary" size="lg" onClick={() => inputRef.current?.click()}>
                   Browse files
@@ -116,9 +105,9 @@ function AnalyzingState({ file, onCancel }: { file: File; onCancel: () => void }
 
   return (
     <div role="status" aria-live="polite">
-      <Loader2 className="size-8 animate-spin text-ink" strokeWidth={2.25} aria-hidden />
+      <Loader2 className="mx-auto size-8 animate-spin text-ink" strokeWidth={2.25} aria-hidden />
       <p className="mt-6 font-display text-[28px] leading-tight font-bold break-all text-ink uppercase">Analyzing {file.name}</p>
-      <p className="mt-3 max-w-md text-[14px] leading-relaxed text-body">
+      <p className="mx-auto mt-3 max-w-md text-[14px] leading-relaxed text-body">
         Scanning the document for sensitive values. This can take up to a minute.
       </p>
       <p className="mt-3 font-mono text-[12px] text-muted tabular-nums">
