@@ -1,21 +1,18 @@
 # RedactProof AI
 
-**Because covering data isn't the same as removing it.**
-
-Traditional PDF "redaction" often just draws a black box over text — the text is still in the file and anyone can copy or extract it. RedactProof AI uses **Google Gemini** to understand what in a document is sensitive, then applies **real, content-removing redaction** with PyMuPDF and **verifies** that the selected text can no longer be extracted.
+Traditional PDF "redaction" just draws a black box over text. However, the text still exists in the file, and anyone can copy and paste it somewhere else, revealing the hidden information. RedactProof uses Google Gemini to understand what in a document is sensitive, then allows for real, content-removing redaction with PyMuPDF and double-checks that the selected text can no longer be extracted.
 
 ## How it works
 
-1. **Upload** a PDF (max 5 MB, 3 pages, text-based).
-2. **Deterministic scan** — regex finds emails, phone numbers, SSNs, and labeled account numbers, with exact page coordinates. Text hidden under black boxes is flagged as `visually_hidden`.
-3. **Gemini analysis** — the PDF is sent to Gemini, which returns structured JSON with context-sensitive values regex cannot recognize: member/customer IDs, staff IDs, names, addresses.
-4. **Validation** — every Gemini suggestion is treated as untrusted: it must match the schema and appear verbatim in the PDF text, or it is rejected. Locations come from PyMuPDF, never from the AI.
-5. **Redaction** — the user picks findings; PyMuPDF removes the text itself and rewrites the file.
-6. **Verification** — the saved output is reopened and searched for every selected value. Success is reported only if none remain.
+1. Upload a PDF
+2. Scanning — regex finds emails, phone numbers, SSNs, and labeled account numbers, with exact page coordinates. Text hidden under black boxes is flagged as `visually_hidden`.
+3. Analysis — the PDF is sent to Gemini, which analyzes the document.
+4. Redaction — the user can pick the information that needs to be redacted; PyMuPDF removes the information and creates a new, properly redacted file.
+5. Verification — the new document is double-checked to make sure it is properly redacted. If so, then there is nothing else required from the user's end. 
 
 ## Backend setup (macOS)
 
-Requires Python 3.11+ (tested on 3.13).
+Requires Python 3.11+
 
 ```bash
 python3.13 -m venv .venv
@@ -23,7 +20,7 @@ python3.13 -m venv .venv
 cp .env.example .env        # then put your key in GEMINI_API_KEY
 ```
 
-Get a free Gemini API key at [Google AI Studio](https://aistudio.google.com/apikey). Never commit `.env`.
+Get a Gemini API key at [Google AI Studio](https://aistudio.google.com/apikey). Don't commit `.env`.
 
 Run the API:
 
@@ -33,8 +30,6 @@ cd backend
 ```
 
 Check it: `curl localhost:8000/api/health`. Interactive docs: http://localhost:8000/docs
-
-API reference for the frontend: [docs/api-contract.md](docs/api-contract.md).
 
 ### Configuration (`.env`)
 
@@ -56,7 +51,7 @@ Creates synthetic PDFs in `demo/samples/`:
 - `insecure_statement.pdf` — bank statement whose account number is covered by a black box but still extractable.
 - `hr_record.pdf` — two-page HR record; the employee number appears on both pages.
 
-All data in them is fictional.
+All data in the documents is made-up.
 
 ## Tests
 
