@@ -38,7 +38,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
       <div className="border-b-[1.5px] border-ink p-4">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-display text-[24px] leading-none font-bold text-ink uppercase">
-            Findings <span className="ml-1 font-mono text-[15px] font-medium text-muted">{String(findings.length).padStart(2, '0')}</span>
+            Findings
           </h2>
           {findings.length > 0 && (
             <Button

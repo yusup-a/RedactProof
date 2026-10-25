@@ -25,9 +25,6 @@
   --color-muted: #66625a;
   --color-subtle: #98938a;
 
-  /* Highlighter: active item, focus, revealed values */
-  --color-marker: #ffdd33;
-
   /* PDF reader chrome (matches a desktop browser's built-in PDF viewer) */
   --color-reader-bar: #323639;
   --color-reader-bg: #525659;
@@ -61,13 +58,12 @@
     background: var(--color-paper);
   }
   ::selection {
-    background: var(--color-marker);
-    color: var(--color-ink);
+    background: var(--color-ink);
+    color: var(--color-paper);
   }
   :focus-visible {
     outline: 2px solid var(--color-ink);
     outline-offset: 2px;
-    box-shadow: 0 0 0 5px var(--color-marker);
   }
 }
 
@@ -88,27 +84,11 @@
     background-repeat: no-repeat;
   }
   .check:checked {
-    background-color: var(--color-ink);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23ffdd33' stroke-width='2.2' stroke-linecap='square'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23121212' stroke-width='2.2' stroke-linecap='square'/%3E%3C/svg%3E");
   }
   .check:indeterminate {
-    background-color: var(--color-ink);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8h8' stroke='%23ffdd33' stroke-width='2.2'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8h8' stroke='%23121212' stroke-width='2.2'/%3E%3C/svg%3E");
   }
-}
-
-@keyframes highlight-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgb(255 221 51 / 0.9);
-  }
-  50% {
-    box-shadow: 0 0 0 6px rgb(255 221 51 / 0);
-  }
-}
-
-.animate-highlight {
-  animation: highlight-pulse 1.4s ease-out 2;
 }
 
 @media (prefers-reduced-motion: reduce) {

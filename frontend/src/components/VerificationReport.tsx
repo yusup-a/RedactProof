@@ -41,7 +41,7 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
                 : `${v.values_still_detected} of the ${v.values_tested} selected values can still be extracted from the output. Do not share this file.`}
             </p>
             {USE_MOCK && (
-              <p className="mt-2 inline-block bg-marker px-1.5 font-mono text-[12px] font-semibold text-ink">Mock mode — no real redaction or verification happened.</p>
+              <p className="mt-2 inline-block bg-paper px-1.5 font-mono text-[12px] font-semibold text-ink">Mock mode — no real redaction or verification happened.</p>
             )}
           </div>
           <div className="shrink-0">
@@ -51,7 +51,7 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
                 download
                 className={cx(
                   'inline-flex h-12 items-center justify-center gap-2.5 border-[1.5px] px-6 font-display text-[16px] font-semibold tracking-[0.03em] uppercase transition-colors',
-                  passed ? 'border-ink bg-paper text-ink hover:bg-marker' : 'border-white bg-transparent text-white hover:bg-white/15',
+                  passed ? 'border-ink bg-paper text-ink hover:bg-ink hover:text-paper' : 'border-white bg-transparent text-white hover:bg-white/15',
                 )}
               >
                 <Download className="size-4" strokeWidth={2.25} aria-hidden />

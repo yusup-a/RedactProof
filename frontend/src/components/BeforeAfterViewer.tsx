@@ -27,7 +27,7 @@ export function BeforeAfterViewer({ analysis, result, page, onPageChange }: Befo
           <figcaption className="mb-4 flex items-center gap-4">
             <span className="tag text-ink">Original</span>
             <span className="flex items-center gap-1.5 font-mono text-[11px] text-muted">
-              <Swatch className="border-success bg-success/10" /> removed regions
+              <Swatch className="border-success" /> removed regions
             </span>
           </figcaption>
           <DocumentViewer

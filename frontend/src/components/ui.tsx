@@ -10,7 +10,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary: 'border-ink bg-ink text-paper hover:bg-body active:translate-y-px',
-  secondary: 'border-ink bg-surface text-ink hover:bg-marker active:translate-y-px',
+  secondary: 'border-ink bg-surface text-ink hover:bg-ink hover:text-paper active:translate-y-px',
   ghost: 'border-transparent text-ink hover:border-ink hover:bg-surface',
   danger: 'border-danger bg-danger text-white hover:bg-danger-ink hover:border-danger-ink active:translate-y-px',
 }
@@ -49,11 +49,11 @@ const RISK_STYLES: Record<Risk, string> = {
   LOW: 'border-ink bg-surface text-ink',
 }
 
-/** Outline + fill used for selected regions on the page preview. */
+/** Outline used for selected regions on the page preview (no fill). */
 export const RISK_BOX: Record<Risk, string> = {
-  HIGH: 'border-danger bg-danger/15',
-  MEDIUM: 'border-warning bg-warning/20',
-  LOW: 'border-ink bg-ink/8',
+  HIGH: 'border-danger',
+  MEDIUM: 'border-warning',
+  LOW: 'border-ink',
 }
 
 export function Tag({ className, children, title }: { className?: string; children: ReactNode; title?: string }) {
@@ -105,7 +105,7 @@ export function PageNav({ page, count, onChange }: { page: number; count: number
   const square = 'flex size-8 items-center justify-center border-[1.5px] font-mono text-[13px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-30'
   return (
     <div className="flex items-center -space-x-[1.5px]" role="group" aria-label="Page navigation">
-      <button type="button" className={cx(square, 'border-ink bg-surface hover:bg-marker')} disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label="Previous page">
+      <button type="button" className={cx(square, 'border-ink bg-surface enabled:hover:bg-ink enabled:hover:text-paper')} disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label="Previous page">
         <ChevronLeft className="size-4" aria-hidden />
       </button>
       {Array.from({ length: count }, (_, i) => i + 1).map((p) => (
@@ -115,12 +115,12 @@ export function PageNav({ page, count, onChange }: { page: number; count: number
           onClick={() => onChange(p)}
           aria-current={p === page ? 'page' : undefined}
           aria-label={`Page ${p}`}
-          className={cx(square, 'border-ink', p === page ? 'relative z-10 bg-ink text-paper' : 'bg-surface text-ink hover:bg-marker')}
+          className={cx(square, 'border-ink', p === page ? 'relative z-10 bg-ink text-paper' : 'bg-surface text-ink hover:bg-ink hover:text-paper')}
         >
           {p}
         </button>
       ))}
-      <button type="button" className={cx(square, 'border-ink bg-surface hover:bg-marker')} disabled={page >= count} onClick={() => onChange(page + 1)} aria-label="Next page">
+      <button type="button" className={cx(square, 'border-ink bg-surface enabled:hover:bg-ink enabled:hover:text-paper')} disabled={page >= count} onClick={() => onChange(page + 1)} aria-label="Next page">
         <ChevronRight className="size-4" aria-hidden />
       </button>
     </div>
@@ -134,10 +134,10 @@ export function Logo() {
       <svg viewBox="0 0 28 28" className="size-7" aria-hidden>
         <rect width="28" height="28" fill="var(--color-ink)" />
         <rect x="5" y="8" width="18" height="4" fill="var(--color-paper)" />
-        <rect x="5" y="15" width="12" height="5" fill="var(--color-marker)" />
+        <rect x="5" y="15" width="12" height="5" fill="var(--color-paper)" />
       </svg>
       <span className="font-display text-[20px] leading-none font-bold tracking-[0.01em] whitespace-nowrap text-ink uppercase">
-        RedactProof<span className="ml-1.5 bg-ink px-1 text-marker">AI</span>
+        RedactProof<span className="ml-1.5 bg-ink px-1 text-paper">AI</span>
       </span>
     </span>
   )

@@ -13,7 +13,6 @@ interface RedactionControlsProps {
 
 export function RedactionControls({ findings, selectedIds, redacting, disabled, error, onRedact, onClear }: RedactionControlsProps) {
   const selected = findings.filter((f) => selectedIds.has(f.id))
-  const locations = selected.reduce((n, f) => n + f.locations.length, 0)
 
   return (
     <div className="border-t-[1.5px] border-ink bg-surface p-4">
@@ -28,8 +27,7 @@ export function RedactionControls({ findings, selectedIds, redacting, disabled, 
             'Select findings to remove'
           ) : (
             <>
-              <span className="font-semibold text-ink">{selected.length}</span> value{selected.length === 1 ? '' : 's'} /{' '}
-              {locations} location{locations === 1 ? '' : 's'} will be removed
+              <span className="font-semibold text-ink">{selected.length}</span> field{selected.length === 1 ? '' : 's'} will be removed
             </>
           )}
         </span>
@@ -38,7 +36,7 @@ export function RedactionControls({ findings, selectedIds, redacting, disabled, 
             type="button"
             onClick={onClear}
             disabled={redacting || disabled}
-            className="text-ink underline decoration-1 underline-offset-4 hover:bg-marker disabled:opacity-40"
+            className="text-ink underline decoration-1 underline-offset-4 hover:decoration-2 disabled:opacity-40"
           >
             Clear
           </button>

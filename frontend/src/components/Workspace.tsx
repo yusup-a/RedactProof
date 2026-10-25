@@ -25,7 +25,6 @@ interface WorkspaceProps {
 interface TabDef {
   id: Tab
   label: string
-  badge?: string
   disabled?: boolean
 }
 
@@ -45,7 +44,7 @@ export function Workspace(props: WorkspaceProps) {
   }
 
   const tabs: TabDef[] = [
-    { id: 'review', label: 'Review findings', badge: String(analysis.findings.length) },
+    { id: 'review', label: 'Review findings' },
     { id: 'report', label: 'Verification report', disabled: !result },
   ]
 
@@ -67,7 +66,7 @@ export function Workspace(props: WorkspaceProps) {
       </div>
 
       {expired && (
-        <div role="alert" className="flex flex-col gap-3 border-[1.5px] border-ink bg-marker px-4 py-3 text-[14px] font-medium text-ink sm:flex-row sm:items-center sm:justify-between">
+        <div role="alert" className="flex flex-col gap-3 border-[1.5px] border-ink bg-surface px-4 py-3 text-[14px] font-medium text-ink sm:flex-row sm:items-center sm:justify-between">
           <span>This session has expired (documents are kept for 30 minutes). Upload the PDF again to continue.</span>
           <Button variant="primary" size="sm" onClick={onStartOver}>
             Upload again
@@ -83,11 +82,11 @@ export function Workspace(props: WorkspaceProps) {
             <section aria-label="Document preview" className="panel">
               <div className="flex min-h-14 flex-wrap items-center gap-x-4 gap-y-2 border-b-[1.5px] border-ink px-4 py-2">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] text-body uppercase">
-                  <span className="flex items-center gap-1.5"><Swatch className="border-danger bg-danger/15" /> High</span>
-                  <span className="flex items-center gap-1.5"><Swatch className="border-warning bg-warning/20" /> Medium</span>
-                  <span className="flex items-center gap-1.5"><Swatch className="border-ink bg-ink/8" /> Low</span>
+                  <span className="flex items-center gap-1.5"><Swatch className="border-danger" /> High</span>
+                  <span className="flex items-center gap-1.5"><Swatch className="border-warning" /> Medium</span>
+                  <span className="flex items-center gap-1.5"><Swatch className="border-ink" /> Low</span>
                   <span className="flex items-center gap-1.5"><Swatch className="border-dashed border-subtle" /> Not selected</span>
-                  <span className="flex items-center gap-1.5"><Swatch className="border-ink bg-marker/55" /> Active</span>
+                  <span className="flex items-center gap-1.5"><Swatch className="border-ink outline-[1.5px] outline-offset-[1.5px] outline-ink" /> Active</span>
                 </div>
               </div>
               <PdfReader
@@ -159,7 +158,7 @@ function TabBar({ tabs, value, onChange }: { tabs: TabDef[]; value: Tab; onChang
 
   return (
     <div role="tablist" aria-label="Workspace" onKeyDown={onKeyDown} className="flex overflow-x-auto border-b-2 border-ink">
-      {tabs.map(({ id, label, badge, disabled }, i) => {
+      {tabs.map(({ id, label, disabled }, i) => {
         const selected = id === value
         return (
           <button
@@ -182,18 +181,8 @@ function TabBar({ tabs, value, onChange }: { tabs: TabDef[]; value: Tab; onChang
               selected ? 'border-ink bg-ink text-paper' : 'border-transparent text-ink hover:border-ink hover:bg-surface',
             )}
           >
-            <span className={cx('font-mono text-[11px] font-medium', selected ? 'text-marker' : 'text-muted')}>0{i + 1}</span>
+            <span className={cx('font-mono text-[11px] font-medium', selected ? 'text-paper/60' : 'text-muted')}>0{i + 1}</span>
             {label}
-            {badge && (
-              <span
-                className={cx(
-                  'px-1.5 py-px font-mono text-[11px] font-semibold tracking-normal normal-case',
-                  selected ? 'bg-marker text-ink' : 'border border-line text-ink',
-                )}
-              >
-                {badge}
-              </span>
-            )}
           </button>
         )
       })}

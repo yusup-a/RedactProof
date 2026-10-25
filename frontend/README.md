@@ -47,7 +47,7 @@ src/
 
 ## Theming
 
-All colors and fonts are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `marker`, `danger`, `warning`, `success`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square and there are no drop shadows, by design.
+All colors and fonts are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `danger`, `warning`, `success`, `reader-*`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square and there are no drop shadows, by design.
 
 Earlier designs are saved as git tags:
 

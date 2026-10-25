@@ -20,7 +20,7 @@ export function AppShell({ health, onHome, children }: { health: HealthState; on
   return (
     <div className="flex min-h-screen flex-col">
       {USE_MOCK && (
-        <div role="status" className="border-b-[1.5px] border-ink bg-marker px-4 py-1.5 text-center font-mono text-[12px] font-semibold text-ink">
+        <div role="status" className="border-b-[1.5px] border-ink bg-ink px-4 py-1.5 text-center font-mono text-[12px] font-semibold text-paper">
           MOCK MODE — showing built-in sample data. Nothing is sent to the backend.
         </div>
       )}
