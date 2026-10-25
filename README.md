@@ -65,10 +65,3 @@ cd backend
 ../.venv/bin/python -m pytest                                    # unit + API tests, Gemini mocked
 RUN_LIVE_GEMINI=1 ../.venv/bin/python -m pytest tests/test_gemini_live.py -s   # optional real Gemini call
 ```
-
-## Privacy and limitations
-
-- Documents are kept in memory for 30 minutes and never written to disk or a database.
-- Uploaded PDFs are sent to the Gemini API (third-party processing). Use synthetic documents for demos.
-- Verification checks the exact selected values in the extracted text. It does not OCR images or inspect metadata, attachments, or form fields. It is targeted verification, not a guarantee that a document is fully sanitized.
-- Scanned/image-only PDFs are not supported (no OCR).
