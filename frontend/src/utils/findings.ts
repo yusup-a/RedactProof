@@ -62,10 +62,6 @@ export function bboxToPercent(bbox: BBox, pageWidth: number, pageHeight: number,
   }
 }
 
-export function pagesOf(finding: Finding): number[] {
-  return [...new Set(finding.locations.map((l) => l.page))].sort((a, b) => a - b)
-}
-
 export function formatBytes(bytes: number) {
   return bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`
 }

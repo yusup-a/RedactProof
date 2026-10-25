@@ -84,7 +84,6 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
             <div key={group.type}>
               <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-line bg-surface px-4 py-2">
                 <h3 className="tag flex-1 text-ink">{group.label}</h3>
-                <span className="font-mono text-[11px] text-muted">{group.findings.length}</span>
               </div>
               <ul>
                 {group.findings.map((f) => (
@@ -96,7 +95,7 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
                     revealed={revealed.has(f.id)}
                     disabled={disabled}
                     onSelect={(checked) => onSelect([f.id], checked)}
-                    onActivate={(page) => onActivate(f.id, page)}
+                    onActivate={() => onActivate(f.id)}
                     onReveal={() => toggleReveal(f.id)}
                   />
                 ))}

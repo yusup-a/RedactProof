@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import type { Finding } from '../api/types'
-import { TYPE_LABELS, pagesOf } from '../utils/findings'
+import { TYPE_LABELS } from '../utils/findings'
 import { Checkbox, RiskBadge, Tag, cx } from './ui'
 
 interface FindingCardProps {
@@ -11,7 +11,7 @@ interface FindingCardProps {
   revealed: boolean
   disabled: boolean
   onSelect: (checked: boolean) => void
-  onActivate: (page?: number) => void
+  onActivate: () => void
   onReveal: () => void
 }
 
@@ -21,9 +21,6 @@ export function FindingCard({ finding, selected, active, revealed, disabled, onS
   useEffect(() => {
     if (active) ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   }, [active])
-
-  const pages = pagesOf(finding)
-  const count = finding.locations.length
 
   return (
     <li
@@ -69,27 +66,13 @@ export function FindingCard({ finding, selected, active, revealed, disabled, onS
 
         <p className="mt-1 text-[13px] leading-snug text-body">{finding.reason}</p>
 
-        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-          {finding.visually_hidden && (
+        {finding.visually_hidden && (
+          <div className="mt-2.5">
             <Tag className="border-danger bg-danger-soft text-danger-ink" title="Covered by a dark shape, but the text is still extractable">
               Hidden · extractable
             </Tag>
-          )}
-          <span className="ml-auto flex items-center gap-1 font-mono text-[11px] text-muted">
-            {count > 1 && <span className="mr-0.5">×{count}</span>}
-            {pages.map((p) => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => onActivate(p)}
-                className="border border-line px-1 py-px text-ink hover:border-ink hover:bg-marker"
-                aria-label={`Show on page ${p}`}
-              >
-                p.{p}
-              </button>
-            ))}
-          </span>
-        </div>
+          </div>
+        )}
       </div>
     </li>
   )
