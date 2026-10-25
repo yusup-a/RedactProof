@@ -150,8 +150,6 @@ export function AttackerView({ analysis, result, page, onPageChange }: AttackerV
           <Legend after={showAfter} />
         </section>
       </div>
-
-      <WhyBoxesFail />
     </div>
   )
 }
@@ -235,30 +233,5 @@ function AfterBanner({ result, findings }: { result: RedactionResult; findings: 
         {v.remaining.map((r) => `${TYPE_LABELS[byId.get(r.finding_id)?.type ?? 'OTHER']} (page ${r.pages.join(', ')})`).join('; ')}.
       </p>
     </div>
-  )
-}
-
-function WhyBoxesFail() {
-  const points = [
-    ['A PDF keeps text and drawings separately.', 'A black rectangle is just another shape painted on top of the page.'],
-    ['Covering changes how a page looks, not what it contains.', 'The characters underneath stay in the file’s text layer.'],
-    ['Machines read the text layer.', 'Copy-paste, search, screen readers, indexers and scripts all ignore the box.'],
-    ['Real redaction deletes the text.', 'RedactProof removes the characters from the PDF, rewrites the file, then re-reads it to verify.'],
-  ]
-  return (
-    <section aria-label="Why black boxes are not redaction" className="border-t-2 border-ink pt-6">
-      <h3 className="font-display text-[22px] font-bold text-ink uppercase">Why a black box isn't redaction</h3>
-      <dl className="mt-5 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
-        {points.map(([title, body], i) => (
-          <div key={title} className="border-t border-line pt-4">
-            <dt className="text-[15px] leading-snug font-semibold text-ink">
-              <span className="mb-2 block font-mono text-[12px] font-medium text-muted">0{i + 1}</span>
-              {title}
-            </dt>
-            <dd className="mt-1.5 text-[14px] leading-relaxed text-body">{body}</dd>
-          </div>
-        ))}
-      </dl>
-    </section>
   )
 }
