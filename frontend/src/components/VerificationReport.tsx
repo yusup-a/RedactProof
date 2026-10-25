@@ -8,12 +8,10 @@ import { Button, cx } from './ui'
 interface VerificationReportProps {
   analysis: AnalysisResponse
   result: RedactionResult
-  page: number
-  onPageChange: (page: number) => void
   onBack: () => void
 }
 
-export function VerificationReport({ analysis, result, page, onPageChange, onBack }: VerificationReportProps) {
+export function VerificationReport({ analysis, result, onBack }: VerificationReportProps) {
   const v = result.verification
   const passed = v.status === 'passed'
   const byId = new Map(analysis.findings.map((f) => [f.id, f]))
@@ -89,7 +87,7 @@ export function VerificationReport({ analysis, result, page, onPageChange, onBac
         </dl>
       </section>
 
-      <BeforeAfterViewer analysis={analysis} result={result} page={page} onPageChange={onPageChange} />
+      <BeforeAfterViewer analysis={analysis} result={result} />
 
       <div className="panel">
         <section aria-label="Removed values" className="p-6">

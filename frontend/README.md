@@ -37,12 +37,12 @@ src/
     UploadZone           Screen A: drag-and-drop, client-side checks, analyzing state
     Workspace            tabs + review layout (Screen B)
     PdfReader            browser-style PDF reader: all pages in one scroll, page + zoom toolbar
-    DocumentViewer       one page preview at true aspect ratio with FindingHighlight overlays
+    DocumentViewer       one page image at a given width with FindingHighlight overlays
     FindingsSidebar      grouped findings, select all / per group, mask + reveal
     FindingCard          one finding: masked value, risk, sources, locations
     RedactionControls    Screen D: the "Redact" button
     VerificationReport   Screen E: status, counts, removed values, download
-    BeforeAfterViewer    original vs redacted previews
+    BeforeAfterViewer    unredacted vs redacted, each in its own PdfReader
 ```
 
 ## Theming

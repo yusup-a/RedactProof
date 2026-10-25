@@ -30,8 +30,6 @@ interface TabDef {
 
 export function Workspace(props: WorkspaceProps) {
   const { analysis, result, selectedIds, onSelect, redacting, redactError, expired, tab, onTabChange, onRedact, onStartOver } = props
-  // Page shown in the report's before/after viewer.
-  const [page, setPage] = useState(1)
   // Active finding in the reader; `scroll` is false when it was clicked on the page itself.
   const [focus, setFocus] = useState<{ id: string; page: number; scroll: boolean; key: number } | null>(null)
 
@@ -133,8 +131,6 @@ export function Workspace(props: WorkspaceProps) {
           <VerificationReport
             analysis={analysis}
             result={result}
-            page={page}
-            onPageChange={setPage}
             onBack={() => onTabChange('review')}
           />
         )}

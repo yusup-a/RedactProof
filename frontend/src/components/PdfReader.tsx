@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, Minus, MoveHorizontal, Plus } from 'lucide-reac
 import type { DocumentPage, Finding } from '../api/types'
 import { api } from '../api/client'
 import { DocumentViewer } from './DocumentViewer'
+import type { HighlightTone } from './FindingHighlight'
 import { cx } from './ui'
 
 /** CSS pixels per PDF point at 100% zoom (96 dpi / 72 pt per inch), like a browser's PDF viewer. */
@@ -14,17 +15,31 @@ const PADDING = 20
 interface PdfReaderProps {
   filename: string
   pages: DocumentPage[]
-  findings: Finding[]
-  selectedIds: Set<string>
-  activeId: string | null
+  findings?: Finding[]
+  selectedIds?: Set<string>
+  activeId?: string | null
   /** Page whose box for the active finding should be scrolled to, and a key that re-triggers the scroll. */
-  focusPage: number | null
-  focusKey: number
-  onFindingClick: (id: string, page: number) => void
+  focusPage?: number | null
+  focusKey?: number
+  onFindingClick?: (id: string, page: number) => void
+  toneFor?: (finding: Finding, hidden: boolean) => HighlightTone
+  /** Height of the scrolling page area. */
+  heightClass?: string
 }
 
 /** Continuous-scroll page view modelled on a browser's built-in PDF viewer, with finding overlays. */
-export function PdfReader({ filename, pages, findings, selectedIds, activeId, focusPage, focusKey, onFindingClick }: PdfReaderProps) {
+export function PdfReader({
+  filename,
+  pages,
+  findings = [],
+  selectedIds,
+  activeId = null,
+  focusPage = null,
+  focusKey = 0,
+  onFindingClick,
+  toneFor,
+  heightClass = 'h-[calc(100vh-25.5rem)] min-h-[420px]',
+}: PdfReaderProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const pageRefs = useRef<(HTMLDivElement | null)[]>([])
   const [available, setAvailable] = useState(0)
@@ -117,7 +132,7 @@ export function PdfReader({ filename, pages, findings, selectedIds, activeId, fo
         ref={scrollRef}
         data-scroll-container
         onScroll={updateCurrent}
-        className="relative h-[calc(100vh-25.5rem)] min-h-[420px] overflow-auto bg-reader-bg"
+        className={cx('relative overflow-auto bg-reader-bg', heightClass)}
         style={{ padding: PADDING }}
       >
         <div className="mx-auto flex w-max min-w-full flex-col items-center" style={{ gap: PAGE_GAP }}>
@@ -137,9 +152,9 @@ export function PdfReader({ filename, pages, findings, selectedIds, activeId, fo
                   findings={findings}
                   selectedIds={selectedIds}
                   activeId={activeId}
-                  onFindingClick={(id) => onFindingClick(id, page.page)}
+                  onFindingClick={onFindingClick && ((id) => onFindingClick(id, page.page))}
+                  toneFor={toneFor}
                   width={Math.round(page.width * PX_PER_PT * scale)}
-                  framed={false}
                   scrollToActive={focusPage === page.page}
                   focusKey={focusKey}
                 />

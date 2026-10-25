@@ -13,12 +13,8 @@ interface DocumentViewerProps {
   onFindingClick?: (id: string) => void
   /** Picks a tone per location; defaults to risk colors. */
   toneFor?: (finding: Finding, hidden: boolean) => HighlightTone
-  /** Vertical space (px) reserved around the page, so it fits in the viewport without distortion. */
-  reservedHeight?: number
-  /** Exact display width in px; overrides the viewport-fit sizing. */
-  width?: number
-  /** Draw an ink outline around the page. */
-  framed?: boolean
+  /** Display width in px; height follows the page's aspect ratio. */
+  width: number
   /** When set, the active finding's first box on this page scrolls into view (re-run when focusKey changes). */
   scrollToActive?: boolean
   focusKey?: number
@@ -38,9 +34,7 @@ export function DocumentViewer({
   activeId,
   onFindingClick,
   toneFor,
-  reservedHeight = 260,
   width,
-  framed = true,
   scrollToActive = false,
   focusKey,
   overlay,
@@ -49,15 +43,11 @@ export function DocumentViewer({
   const [failedUrl, setFailedUrl] = useState<string | null>(null)
   const loaded = loadedUrl === imageUrl
   const failed = failedUrl === imageUrl
-  const ratio = page.width / page.height
 
   return (
     <div
-      className={cx('relative mx-auto shrink-0 overflow-hidden bg-white', framed && 'border-[1.5px] border-ink')}
-      style={{
-        aspectRatio: `${page.width} / ${page.height}`,
-        width: width !== undefined ? `${width}px` : `min(100%, max(320px, calc((100vh - ${reservedHeight}px) * ${ratio})))`,
-      }}
+      className="relative mx-auto shrink-0 overflow-hidden bg-white"
+      style={{ aspectRatio: `${page.width} / ${page.height}`, width }}
     >
       {!failed && (
         <img
