@@ -50,7 +50,8 @@ export function PdfReader({
   useLayoutEffect(() => {
     const el = scrollRef.current
     if (!el) return
-    const measure = () => setAvailable(el.clientWidth - PADDING * 2)
+    // clientWidth is rounded and can be a fraction of a pixel too wide, so keep a 1px margin.
+    const measure = () => setAvailable(Math.floor(el.clientWidth - PADDING * 2 - 1))
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(el)
@@ -132,7 +133,7 @@ export function PdfReader({
         ref={scrollRef}
         data-scroll-container
         onScroll={updateCurrent}
-        className={cx('relative overflow-auto bg-reader-bg', heightClass)}
+        className={cx('relative overflow-auto bg-reader-bg', zoom === 'fit' && 'overflow-x-hidden', heightClass)}
         style={{ padding: PADDING }}
       >
         <div className="mx-auto flex w-max min-w-full flex-col items-center" style={{ gap: PAGE_GAP }}>
@@ -154,7 +155,7 @@ export function PdfReader({
                   activeId={activeId}
                   onFindingClick={onFindingClick && ((id) => onFindingClick(id, page.page))}
                   toneFor={toneFor}
-                  width={Math.round(page.width * PX_PER_PT * scale)}
+                  width={Math.floor(page.width * PX_PER_PT * scale)}
                   scrollToActive={focusPage === page.page}
                   focusKey={focusKey}
                 />
