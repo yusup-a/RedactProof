@@ -64,7 +64,7 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           className={cx(
-            'flex min-h-[280px] flex-col justify-center border-2 border-dashed border-ink px-8 py-8 shadow-hard transition-colors',
+            'flex min-h-[280px] flex-col justify-center border-2 border-dashed border-ink px-8 py-8 transition-colors',
             dragging ? 'bg-marker' : 'bg-surface',
           )}
         >

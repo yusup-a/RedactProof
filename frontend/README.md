@@ -40,13 +40,13 @@ src/
     FindingsSidebar      grouped findings, select all / per group, mask + reveal
     FindingCard          one finding: masked value, risk, sources, locations
     RedactionControls    Screen D: "Securely Redact Selected"
-    VerificationReport   Screen E: status, counts, limitations, download
+    VerificationReport   Screen E: status, counts, removed values, download
     BeforeAfterViewer    original vs redacted previews
 ```
 
 ## Theming
 
-All colors, fonts and shadows are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `marker`, `danger`, `warning`, `success`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square throughout by design.
+All colors and fonts are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `marker`, `danger`, `warning`, `success`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square and there are no drop shadows, by design.
 
 Earlier designs are saved as git tags:
 

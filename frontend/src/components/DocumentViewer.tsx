@@ -42,10 +42,10 @@ export function DocumentViewer({
 
   return (
     <div
-      className="relative mx-auto overflow-hidden border-[1.5px] border-ink bg-white shadow-hard"
+      className="relative mx-auto overflow-hidden border-[1.5px] border-ink bg-white"
       style={{
         aspectRatio: `${page.width} / ${page.height}`,
-        width: `min(calc(100% - 4px), max(320px, calc((100vh - ${reservedHeight}px) * ${ratio})))`,
+        width: `min(100%, max(320px, calc((100vh - ${reservedHeight}px) * ${ratio})))`,
       }}
     >
       {!failed && (

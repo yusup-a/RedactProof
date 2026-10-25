@@ -142,7 +142,6 @@ export function Workspace(props: WorkspaceProps) {
             page={page}
             onPageChange={setPage}
             onBack={() => onTabChange('review')}
-            onStartOver={onStartOver}
           />
         )}
       </div>

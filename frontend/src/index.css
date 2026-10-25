@@ -49,9 +49,6 @@
   --color-success-ink: #0a6634;
   --color-success-soft: #dff0e5;
   --color-success-line: #9fd1b2;
-
-  --shadow-hard: 4px 4px 0 0 var(--color-ink);
-  --shadow-hard-sm: 2px 2px 0 0 var(--color-ink);
 }
 
 @layer base {
