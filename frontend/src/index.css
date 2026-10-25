@@ -1,0 +1,102 @@
+@import 'tailwindcss';
+
+/* Self-hosted type (no third-party font requests). Hanken Grotesk stands in for Neue Montreal. */
+@import '@fontsource/hanken-grotesk/400.css';
+@import '@fontsource/hanken-grotesk/500.css';
+@import '@fontsource/hanken-grotesk/600.css';
+@import '@fontsource/hanken-grotesk/700.css';
+
+/*
+ * Design tokens. Components use these names only (bg-paper, text-danger-ink, border-ink…),
+ * so the whole UI can be re-themed from this block. Corners are square by design.
+ */
+@theme {
+  /* One typeface everywhere; display and data styles differ by weight, case and tracking. */
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: var(--font-sans);
+
+  /* Paper and ink */
+  --color-paper: #ffffff;
+  --color-surface: #ffffff;
+  --color-line: #d6d1c5;
+  --color-ink: #121212;
+  --color-body: #2a2926;
+  --color-muted: #66625a;
+  --color-subtle: #98938a;
+
+  /* PDF reader chrome (matches a desktop browser's built-in PDF viewer) */
+  --color-reader-bar: #323639;
+  --color-reader-bg: #525659;
+
+  /* Status: solid (fills, marks), ink (text on light), soft (tints), line (borders) */
+  --color-danger: #d42a1f;
+  --color-danger-ink: #a81d14;
+  --color-danger-soft: #fbe4e1;
+  --color-danger-line: #eeb1ab;
+
+  --color-warning: #eb9a00;
+  --color-warning-ink: #7d5200;
+  --color-warning-soft: #fdf0cf;
+  --color-warning-line: #ecc871;
+
+  --color-success: #0d7a3f;
+  --color-success-ink: #0a6634;
+  --color-success-soft: #dff0e5;
+  --color-success-line: #9fd1b2;
+}
+
+@layer base {
+  html {
+    font-variant-numeric: tabular-nums;
+    background: var(--color-paper);
+    color: var(--color-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    min-height: 100vh;
+    background: var(--color-paper);
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* A content section: white, no outline. */
+  .panel {
+    @apply bg-surface;
+  }
+  /* Small mono caps used for section labels and metadata. */
+  .tag {
+    @apply font-mono text-[11px] font-medium tracking-[0.08em] uppercase;
+  }
+
+  /* Square custom checkbox; keeps the native input for keyboard and screen readers. */
+  .check {
+    @apply size-[18px] shrink-0 cursor-pointer appearance-none border-[1.5px] border-ink bg-surface transition-colors disabled:cursor-not-allowed disabled:opacity-40;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .check:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23121212' stroke-width='2.2' stroke-linecap='square'/%3E%3C/svg%3E");
+  }
+  .check:indeterminate {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8h8' stroke='%23121212' stroke-width='2.2'/%3E%3C/svg%3E");
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
