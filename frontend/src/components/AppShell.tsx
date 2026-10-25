@@ -9,7 +9,7 @@ export type HealthState = { status: 'loading' } | { status: 'ok'; health: Health
 function OfflineBadge({ state }: { state: HealthState }) {
   if (state.status !== 'down') return null
   return (
-    <span className="inline-flex h-8 items-center gap-2 border-[1.5px] border-ink bg-surface px-2.5 font-mono text-[12px] font-medium whitespace-nowrap text-ink">
+    <span className="inline-flex h-8 items-center gap-2 bg-ink px-2.5 font-mono text-[12px] font-medium whitespace-nowrap text-paper">
       <span className="size-2.5 shrink-0 bg-danger" aria-hidden />
       Backend offline
     </span>

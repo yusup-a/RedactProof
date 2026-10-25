@@ -47,7 +47,7 @@ src/
 
 ## Theming
 
-All colors and fonts are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `danger`, `warning`, `success`, `reader-*`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square and there are no drop shadows, by design.
+All colors and fonts are design tokens in the `@theme` block of [src/index.css](src/index.css) (`paper`, `surface`, `ink`, `danger`, `warning`, `success`, `reader-*`, …). Components only use those token names, so changing a value there re-themes the whole UI. Corners are square, and there are no drop shadows or outlined section boxes, by design. Buttons and tags are solid; the only outlines are the finding boxes drawn on the PDF.
 
 Earlier designs are saved as git tags:
 
@@ -57,6 +57,7 @@ Earlier designs are saved as git tags:
 | `design-light-v1` | Light, rounded |
 | `design-bold-v1` | Bold, square, editorial (first version) |
 | `design-caps-v1` | Simplified white UI with PDF readers, all-caps titles and buttons |
+| `design-boxes-v1` | Title-case labels, outlined section boxes and buttons |
 
 To view one: `git checkout <tag>`. To bring one back on the branch: `git restore --source <tag> -- frontend/src frontend/index.html frontend/public frontend/package.json frontend/package-lock.json`, run `npm install`, and commit.
 

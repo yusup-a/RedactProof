@@ -14,12 +14,12 @@ export function BeforeAfterViewer({ analysis, result }: BeforeAfterViewerProps) 
 
   return (
     <section aria-label="Unredacted and redacted" className="panel">
-      <div className="flex h-14 items-center border-b-[1.5px] border-ink px-5">
+      <div className="flex h-12 items-center">
         <h3 className="font-display text-[20px] font-bold text-ink">Unredacted / Redacted</h3>
       </div>
-      <div className="grid md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <figure className="min-w-0">
-          <figcaption className="flex h-12 items-center gap-4 border-b border-line px-5">
+          <figcaption className="flex h-10 items-center gap-4">
             <span className="text-[14px] font-semibold text-ink">Unredacted</span>
             <span className="flex items-center gap-1.5 font-mono text-[11px] text-muted">
               <Swatch className="border-success" /> redacted info
@@ -27,8 +27,8 @@ export function BeforeAfterViewer({ analysis, result }: BeforeAfterViewerProps) 
           </figcaption>
           <PdfReader filename={analysis.filename} pages={analysis.pages} findings={removed} toneFor={() => 'redacted'} />
         </figure>
-        <figure className="min-w-0 border-ink max-md:border-t-[1.5px] md:border-l-[1.5px]">
-          <figcaption className="flex h-12 items-center border-b border-line px-5">
+        <figure className="min-w-0">
+          <figcaption className="flex h-10 items-center">
             <span className="text-[14px] font-semibold text-ink">Redacted</span>
           </figcaption>
           <PdfReader filename={redactedName} pages={result.pages} />

@@ -1,18 +1,21 @@
 import { useEffect, useRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import type { Risk } from '../api/types'
 
 export function cx(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse'
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'border-ink bg-ink text-paper hover:bg-body active:translate-y-px',
-  secondary: 'border-ink bg-surface text-ink hover:bg-ink hover:text-paper active:translate-y-px',
-  ghost: 'border-transparent text-ink hover:opacity-65',
-  danger: 'border-danger bg-danger text-white hover:bg-danger-ink hover:border-danger-ink active:translate-y-px',
+  primary: 'bg-ink text-paper hover:bg-body active:translate-y-px',
+  // Outlines were removed by design, so secondary actions are solid black too.
+  secondary: 'bg-ink text-paper hover:bg-body active:translate-y-px',
+  ghost: 'text-ink hover:opacity-65',
+  danger: 'bg-danger text-white hover:bg-danger-ink active:translate-y-px',
+  // For use on black backgrounds.
+  inverse: 'bg-paper text-ink hover:bg-paper/85 active:translate-y-px',
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -28,7 +31,7 @@ export function Button({ variant = 'secondary', size = 'md', loading, icon, clas
     <button
       type="button"
       className={cx(
-        'inline-flex shrink-0 items-center justify-center border-[1.5px] font-display font-semibold transition-colors duration-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:translate-y-0',
+        'inline-flex shrink-0 items-center justify-center font-display font-semibold transition-colors duration-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:translate-y-0',
         sizes[size],
         BUTTON_VARIANTS[variant],
         className,
@@ -44,9 +47,9 @@ export function Button({ variant = 'secondary', size = 'md', loading, icon, clas
 }
 
 const RISK_STYLES: Record<Risk, string> = {
-  HIGH: 'border-danger bg-danger text-white',
-  MEDIUM: 'border-warning bg-warning text-ink',
-  LOW: 'border-ink bg-surface text-ink',
+  HIGH: 'bg-danger text-white',
+  MEDIUM: 'bg-warning text-ink',
+  LOW: 'bg-ink text-paper',
 }
 
 /** Outline used for selected regions on the page preview (no fill). */
@@ -58,7 +61,7 @@ export const RISK_BOX: Record<Risk, string> = {
 
 export function Tag({ className, children, title }: { className?: string; children: ReactNode; title?: string }) {
   return (
-    <span title={title} className={cx('tag inline-flex h-5 items-center gap-1 border px-1.5 leading-none', className)}>
+    <span title={title} className={cx('tag inline-flex h-5 items-center gap-1 px-1.5 leading-none', className)}>
       {children}
     </span>
   )
@@ -97,33 +100,6 @@ export function Checkbox({ checked, indeterminate = false, onChange, label, disa
       onChange={(e) => onChange(e.target.checked)}
       className={cx('check', className)}
     />
-  )
-}
-
-export function PageNav({ page, count, onChange }: { page: number; count: number; onChange: (page: number) => void }) {
-  if (count <= 1) return <span className="tag text-muted">Page 1 / 1</span>
-  const square = 'flex size-8 items-center justify-center border-[1.5px] font-mono text-[13px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-30'
-  return (
-    <div className="flex items-center -space-x-[1.5px]" role="group" aria-label="Page navigation">
-      <button type="button" className={cx(square, 'border-ink bg-surface enabled:hover:bg-ink enabled:hover:text-paper')} disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label="Previous page">
-        <ChevronLeft className="size-4" aria-hidden />
-      </button>
-      {Array.from({ length: count }, (_, i) => i + 1).map((p) => (
-        <button
-          key={p}
-          type="button"
-          onClick={() => onChange(p)}
-          aria-current={p === page ? 'page' : undefined}
-          aria-label={`Page ${p}`}
-          className={cx(square, 'border-ink', p === page ? 'relative z-10 bg-ink text-paper' : 'bg-surface text-ink hover:bg-ink hover:text-paper')}
-        >
-          {p}
-        </button>
-      ))}
-      <button type="button" className={cx(square, 'border-ink bg-surface enabled:hover:bg-ink enabled:hover:text-paper')} disabled={page >= count} onClick={() => onChange(page + 1)} aria-label="Next page">
-        <ChevronRight className="size-4" aria-hidden />
-      </button>
-    </div>
   )
 }
 

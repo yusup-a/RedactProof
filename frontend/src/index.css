@@ -68,9 +68,9 @@
 }
 
 @layer components {
-  /* A ruled panel: hard ink border, square corners. */
+  /* A content section: white, no outline. */
   .panel {
-    @apply border-[1.5px] border-ink bg-surface;
+    @apply bg-surface;
   }
   /* Small mono caps used for section labels and metadata. */
   .tag {

@@ -26,7 +26,7 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
 
   return (
     <div className="space-y-8">
-      <section aria-label="Verification status" className="border-[1.5px] border-ink bg-surface">
+      <section aria-label="Verification status" className="bg-surface">
         <div className={cx('flex flex-col gap-6 px-6 py-6 md:flex-row md:items-center md:justify-between', passed ? 'bg-success text-white' : 'bg-danger text-white')}>
           <div role={passed ? 'status' : 'alert'}>
             <p className="tag text-white/75">02 / Verification</p>
@@ -49,8 +49,8 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
                 href={api.url(result.download_url)}
                 download
                 className={cx(
-                  'inline-flex h-12 items-center justify-center gap-2.5 border-[1.5px] px-6 font-display text-[16px] font-semibold transition-colors',
-                  passed ? 'border-ink bg-paper text-ink hover:bg-ink hover:text-paper' : 'border-white bg-transparent text-white hover:bg-white/15',
+                  'inline-flex h-12 items-center justify-center gap-2.5 px-6 font-display text-[16px] font-semibold transition-colors',
+                  passed ? 'bg-ink text-paper hover:bg-body' : 'bg-paper text-danger-ink hover:bg-white/90',
                 )}
               >
                 <Download className="size-4" strokeWidth={2.25} aria-hidden />
@@ -65,7 +65,7 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
         </div>
 
         {!passed && v.remaining.length > 0 && (
-          <ul className="border-t-[1.5px] border-ink bg-danger-soft px-6 py-3 font-mono text-[13px] text-danger-ink">
+          <ul className="bg-danger-soft px-6 py-3 font-mono text-[13px] text-danger-ink">
             {v.remaining.map((r) => {
               const f = byId.get(r.finding_id)
               return (
@@ -77,9 +77,9 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
           </ul>
         )}
 
-        <dl className="grid border-t-[1.5px] border-ink sm:grid-cols-3">
-          {stats.map(([label, value, tone], i) => (
-            <div key={label} className={cx('flex flex-col-reverse px-6 py-5', i > 0 && 'border-line max-sm:border-t sm:border-l')}>
+        <dl className="grid sm:grid-cols-3">
+          {stats.map(([label, value, tone]) => (
+            <div key={label} className="flex flex-col-reverse px-6 py-5">
               <dt className="tag mt-2 text-muted">{label}</dt>
               <dd className={cx('font-display text-[48px] leading-none font-bold tabular-nums', tone ?? 'text-ink')}>{value}</dd>
             </div>
@@ -90,7 +90,7 @@ export function VerificationReport({ analysis, result, onBack }: VerificationRep
       <BeforeAfterViewer analysis={analysis} result={result} />
 
       <div className="panel">
-        <section aria-label="Removed values" className="p-6">
+        <section aria-label="Removed values">
           <h3 className="font-display text-[20px] font-bold text-ink">Removed Values</h3>
           <ul className="mt-4 grid border-t-[1.5px] border-ink md:grid-cols-2 md:gap-x-10">
             {redacted.map((f) => (

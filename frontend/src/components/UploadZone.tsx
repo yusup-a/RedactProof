@@ -53,8 +53,8 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           className={cx(
-            'flex min-h-[300px] flex-col items-center justify-center border-2 border-ink px-8 py-10 text-center transition-colors',
-            dragging ? 'border-[3px] bg-surface' : 'bg-surface',
+            'flex min-h-[300px] flex-col items-center justify-center bg-surface px-8 py-10 text-center transition-opacity',
+            dragging && 'opacity-70',
           )}
         >
           {analyzing ? (
@@ -62,7 +62,7 @@ export function UploadZone({ analyzing, error, onFile, onCancel }: UploadZonePro
           ) : (
             <>
               <ArrowDown className="size-8 text-ink" strokeWidth={2.25} aria-hidden />
-              <h1 className="mt-6 font-display text-[32px] leading-tight font-bold text-ink">Upload A PDF To Redact</h1>
+              <h1 className="mt-6 font-display text-[32px] leading-tight font-bold text-ink">{dragging ? 'Drop To Upload' : 'Upload A PDF To Redact'}</h1>
               <div className="mt-8">
                 <Button variant="primary" size="lg" onClick={() => inputRef.current?.click()}>
                   Browse Files

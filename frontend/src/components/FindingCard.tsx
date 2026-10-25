@@ -68,7 +68,7 @@ export function FindingCard({ finding, selected, active, revealed, disabled, onS
 
         {finding.visually_hidden && (
           <div className="mt-2.5">
-            <Tag className="border-danger bg-danger-soft text-danger-ink" title="Covered by a dark shape, but the text is still extractable">
+            <Tag className="bg-danger text-white" title="Covered by a dark shape, but the text is still extractable">
               Hidden · extractable
             </Tag>
           </div>

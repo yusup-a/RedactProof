@@ -64,9 +64,9 @@ export function Workspace(props: WorkspaceProps) {
       </div>
 
       {expired && (
-        <div role="alert" className="flex flex-col gap-3 border-[1.5px] border-ink bg-surface px-4 py-3 text-[14px] font-medium text-ink sm:flex-row sm:items-center sm:justify-between">
+        <div role="alert" className="flex flex-col gap-3 bg-ink px-4 py-3 text-[14px] font-medium text-paper sm:flex-row sm:items-center sm:justify-between">
           <span>This session has expired (documents are kept for 30 minutes). Upload the PDF again to continue.</span>
-          <Button variant="primary" size="sm" onClick={onStartOver}>
+          <Button variant="inverse" size="sm" onClick={onStartOver}>
             Upload Again
           </Button>
         </div>
@@ -78,7 +78,7 @@ export function Workspace(props: WorkspaceProps) {
         {tab === 'review' && (
           <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(380px,440px)]">
             <section aria-label="Document preview" className="panel">
-              <div className="flex min-h-14 flex-wrap items-center gap-x-4 gap-y-2 border-b-[1.5px] border-ink px-4 py-2">
+              <div className="flex min-h-12 flex-wrap items-center gap-x-4 gap-y-2 py-2">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] text-body uppercase">
                   <span className="flex items-center gap-1.5"><Swatch className="border-danger" /> High</span>
                   <span className="flex items-center gap-1.5"><Swatch className="border-warning" /> Medium</span>
@@ -107,7 +107,7 @@ export function Workspace(props: WorkspaceProps) {
               onActivate={activate}
               status={
                 analysis.gemini_status !== 'ok' && (
-                  <p className="border-[1.5px] border-warning bg-warning-soft px-3 py-2 text-[13px] leading-snug text-warning-ink">
+                  <p className="text-[13px] leading-snug text-warning-ink">
                     <span className="font-semibold">Contextual analysis was unavailable.</span> Showing pattern-based results
                     only — some values may not be detected.
                   </p>
