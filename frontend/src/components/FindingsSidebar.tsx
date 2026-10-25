@@ -80,40 +80,29 @@ export function FindingsSidebar({ findings, selectedIds, activeId, disabled, onS
             </p>
           </div>
         ) : (
-          groups.map((group) => {
-            const ids = group.findings.map((f) => f.id)
-            const n = ids.filter((id) => selectedIds.has(id)).length
-            return (
-              <div key={group.type}>
-                <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-line bg-surface px-4 py-2">
-                  <Checkbox
-                    checked={n === ids.length}
-                    indeterminate={n > 0 && n < ids.length}
-                    onChange={(checked) => onSelect(ids, checked)}
-                    disabled={disabled}
-                    label={`Select all ${group.label} findings`}
-                  />
-                  <h3 className="tag flex-1 text-ink">{group.label}</h3>
-                  <span className="font-mono text-[11px] text-muted">{ids.length}</span>
-                </div>
-                <ul>
-                  {group.findings.map((f) => (
-                    <FindingCard
-                      key={f.id}
-                      finding={f}
-                      selected={selectedIds.has(f.id)}
-                      active={activeId === f.id}
-                      revealed={revealed.has(f.id)}
-                      disabled={disabled}
-                      onSelect={(checked) => onSelect([f.id], checked)}
-                      onActivate={(page) => onActivate(f.id, page)}
-                      onReveal={() => toggleReveal(f.id)}
-                    />
-                  ))}
-                </ul>
+          groups.map((group) => (
+            <div key={group.type}>
+              <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-line bg-surface px-4 py-2">
+                <h3 className="tag flex-1 text-ink">{group.label}</h3>
+                <span className="font-mono text-[11px] text-muted">{group.findings.length}</span>
               </div>
-            )
-          })
+              <ul>
+                {group.findings.map((f) => (
+                  <FindingCard
+                    key={f.id}
+                    finding={f}
+                    selected={selectedIds.has(f.id)}
+                    active={activeId === f.id}
+                    revealed={revealed.has(f.id)}
+                    disabled={disabled}
+                    onSelect={(checked) => onSelect([f.id], checked)}
+                    onActivate={(page) => onActivate(f.id, page)}
+                    onReveal={() => toggleReveal(f.id)}
+                  />
+                ))}
+              </ul>
+            </div>
+          ))
         )}
       </div>
 
